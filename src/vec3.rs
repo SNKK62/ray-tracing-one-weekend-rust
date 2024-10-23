@@ -1,3 +1,4 @@
+use crate::utils::clamp;
 use std::{
     fmt::{Display, Formatter, Result as FmtResult},
     ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub, SubAssign},
@@ -24,8 +25,21 @@ impl Color {
         (255.999 * self.z()) as u8
     }
 
-    pub fn write(&self) {
-        println!("{} {} {}", self.r(), self.g(), self.b());
+    pub fn write(&self, samples_per_pixel: i64) {
+        let scale = 1.0 / samples_per_pixel as f64;
+        let r = self.x() * scale;
+        let g = self.y() * scale;
+        let b = self.z() * scale;
+
+        let min = 0.0;
+        let max = 0.999;
+
+        println!(
+            "{} {} {}",
+            (255.999 * clamp(r, min, max)).round() as u8,
+            (255.999 * clamp(g, min, max)).round() as u8,
+            (255.999 * clamp(b, min, max)).round() as u8
+        );
     }
 }
 

@@ -9,6 +9,12 @@ pub struct HitRecord {
     pub front_face: bool,
 }
 
+impl Default for HitRecord {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl HitRecord {
     pub fn new() -> Self {
         HitRecord {
