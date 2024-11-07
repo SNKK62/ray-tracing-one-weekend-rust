@@ -18,10 +18,15 @@ impl Ray {
         self.origin + self.direction * t
     }
 
-    pub fn color(&self, world: &dyn hittable::Hittable) -> vec3::Color {
+    pub fn color(&self, world: &dyn hittable::Hittable, depth: usize) -> vec3::Color {
+        if depth == 0 {
+            return vec3::Color::zero();
+        }
+
         let mut rec = hittable::HitRecord::new();
-        if world.hit(self, 0.0, f64::INFINITY, &mut rec) {
-            return 0.5 * (rec.normal + vec3::Color::new(1.0, 1.0, 1.0));
+        if world.hit(self, 0.001, f64::INFINITY, &mut rec) {
+            let target = rec.p + rec.normal + vec3::Point3::rand_unit_vector();
+            return 0.5 * Self::new(&rec.p, &(target - rec.p)).color(world, depth - 1);
         }
 
         let unit_direction = self.direction.unit();

@@ -1,4 +1,5 @@
 use crate::utils::clamp;
+use rand::Rng;
 use std::{
     fmt::{Display, Formatter, Result as FmtResult},
     ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub, SubAssign},
@@ -27,9 +28,10 @@ impl Color {
 
     pub fn write(&self, samples_per_pixel: i64) {
         let scale = 1.0 / samples_per_pixel as f64;
-        let r = self.x() * scale;
-        let g = self.y() * scale;
-        let b = self.z() * scale;
+        // Divide the color by the number of samples and gamma-correct for gamma=2.0
+        let r = (self.x() * scale).sqrt();
+        let g = (self.y() * scale).sqrt();
+        let b = (self.z() * scale).sqrt();
 
         let min = 0.0;
         let max = 0.999;
@@ -50,6 +52,39 @@ impl Vec3 {
 
     pub fn new(x: f64, y: f64, z: f64) -> Self {
         Vec3 { e: [x, y, z] }
+    }
+
+    pub fn rand() -> Self {
+        Self::new(
+            rand::thread_rng().gen_range(0.0..1.0),
+            rand::thread_rng().gen_range(0.0..1.0),
+            rand::thread_rng().gen_range(0.0..1.0),
+        )
+    }
+
+    pub fn rand_range(min: f64, max: f64) -> Self {
+        Self::new(
+            rand::thread_rng().gen_range(min..max),
+            rand::thread_rng().gen_range(min..max),
+            rand::thread_rng().gen_range(min..max),
+        )
+    }
+
+    pub fn rand_unit_sphere() -> Self {
+        loop {
+            let sphere = Self::rand_range(-1.0, 1.0);
+            if sphere.len() >= 1.0 {
+                continue;
+            };
+            return sphere;
+        }
+    }
+
+    pub fn rand_unit_vector() -> Self {
+        let a = rand::thread_rng().gen_range(0.0..2.0 * std::f64::consts::PI);
+        let z = rand::thread_rng().gen_range(-1.0..1.0);
+        let r = ((1.0 - z * z) as f64).sqrt();
+        Self::new(r * a.cos(), r * a.sin(), z)
     }
 
     pub fn x(&self) -> f64 {

@@ -5,7 +5,7 @@ mod ray;
 mod utils;
 mod vec3;
 use ray::Ray;
-use vec3::{Point3, Vec3};
+use vec3::Point3;
 
 pub struct Camera {
     origin: vec3::Point3,
@@ -54,6 +54,7 @@ fn main() {
     let width = 384;
     let height = (width as f64 / aspect_ratio) as i64;
     let samples_per_pixel = 100;
+    let max_depth = 100;
 
     print!("P3\n{} {}\n255\n", width, height);
 
@@ -77,12 +78,12 @@ fn main() {
                 let u = (i as f64 + rand::thread_rng().gen_range(0.0..1.0)) / (width - 1) as f64;
                 let v = (j as f64 + rand::thread_rng().gen_range(0.0..1.0)) / (height - 1) as f64;
                 let r = cam.get_ray(u, v);
-                pixel_color += r.color(&world);
+                pixel_color += r.color(&world, max_depth);
                 pb.update();
             }
             pixel_color.write(samples_per_pixel);
         }
     }
 
-    eprintln!("\nDone.\n"); // indicate completion
+    eprintln!("\n\nDone.\n"); // indicate completion
 }
