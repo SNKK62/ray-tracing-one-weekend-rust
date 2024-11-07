@@ -1,3 +1,5 @@
+use std::{cell::RefCell, rc::Rc};
+
 use rand::Rng;
 mod hittable;
 mod progress;
@@ -62,10 +64,32 @@ fn main() {
     world.add(Box::new(hittable::Sphere::new(
         &Point3::new(0.0, 0.0, -1.0),
         0.5,
+        Rc::new(RefCell::new(hittable::Lambertian::new(&vec3::Color::new(
+            0.7, 0.3, 0.3,
+        )))),
     )));
     world.add(Box::new(hittable::Sphere::new(
         &Point3::new(0.0, -100.5, -1.0),
         100.0,
+        Rc::new(RefCell::new(hittable::Lambertian::new(&vec3::Color::new(
+            0.8, 0.8, 0.0,
+        )))),
+    )));
+    world.add(Box::new(hittable::Sphere::new(
+        &Point3::new(1.0, 0.0, -1.0),
+        0.5,
+        Rc::new(RefCell::new(hittable::Metal::new(
+            &vec3::Color::new(0.8, 0.6, 0.2),
+            0.3,
+        ))),
+    )));
+    world.add(Box::new(hittable::Sphere::new(
+        &Point3::new(-1.0, 0.0, -1.0),
+        0.5,
+        Rc::new(RefCell::new(hittable::Metal::new(
+            &vec3::Color::new(0.8, 0.8, 0.8),
+            1.0,
+        ))),
     )));
 
     let cam = Camera::new();

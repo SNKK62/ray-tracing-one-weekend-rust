@@ -25,8 +25,18 @@ impl Ray {
 
         let mut rec = hittable::HitRecord::new();
         if world.hit(self, 0.001, f64::INFINITY, &mut rec) {
-            let target = rec.p + rec.normal + vec3::Point3::rand_unit_vector();
-            return 0.5 * Self::new(&rec.p, &(target - rec.p)).color(world, depth - 1);
+            let mut scattered = Self::new(&rec.p, &rec.normal);
+            let mut attenuation = vec3::Color::zero();
+            if rec.material.clone().unwrap().borrow().scatter(
+                // NOTE: rec.material is set in hit()
+                self,
+                &rec,
+                &mut attenuation,
+                &mut scattered,
+            ) {
+                return attenuation * scattered.color(world, depth - 1);
+            }
+            return vec3::Color::zero();
         }
 
         let unit_direction = self.direction.unit();
