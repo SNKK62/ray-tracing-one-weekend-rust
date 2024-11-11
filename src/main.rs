@@ -66,7 +66,7 @@ fn main() {
         &Point3::new(0.0, 0.0, -1.0),
         0.5,
         Rc::new(RefCell::new(material::Lambertian::new(&vec3::Color::new(
-            0.7, 0.3, 0.3,
+            0.1, 0.2, 0.5,
         )))),
     )));
     world.add(Box::new(hittable::Sphere::new(
@@ -81,16 +81,18 @@ fn main() {
         0.5,
         Rc::new(RefCell::new(material::Metal::new(
             &vec3::Color::new(0.8, 0.6, 0.2),
-            0.3,
+            0.0,
         ))),
     )));
     world.add(Box::new(hittable::Sphere::new(
         &Point3::new(-1.0, 0.0, -1.0),
         0.5,
-        Rc::new(RefCell::new(material::Metal::new(
-            &vec3::Color::new(0.8, 0.8, 0.8),
-            1.0,
-        ))),
+        Rc::new(RefCell::new(material::Dielectric::new(1.5))),
+    )));
+    world.add(Box::new(hittable::Sphere::new(
+        &Point3::new(-1.0, 0.0, -1.0),
+        -0.45, // negative radius for hollow sphere
+        Rc::new(RefCell::new(material::Dielectric::new(1.5))),
     )));
 
     let cam = Camera::new();
