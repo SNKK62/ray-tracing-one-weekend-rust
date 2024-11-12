@@ -8,6 +8,7 @@ mod ray;
 mod utils;
 mod vec3;
 use ray::Ray;
+use utils::degrees_to_radians;
 use vec3::Point3;
 
 pub struct Camera {
@@ -17,24 +18,27 @@ pub struct Camera {
     vertical: vec3::Vec3,
 }
 
-impl Default for Camera {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl Camera {
-    pub fn new() -> Self {
-        let aspect_ratio = 16.0 / 9.0;
-        let viewport_height = 2.0;
+    pub fn new(
+        lookfrom: vec3::Vec3,
+        lookat: vec3::Vec3,
+        vup: vec3::Vec3,
+        vfov: f64,
+        aspect_ratio: f64,
+    ) -> Self {
+        let theta = degrees_to_radians(vfov);
+        let h = f64::tan(theta / 2.0);
+        let viewport_height = 2.0 * h;
         let viewport_width = aspect_ratio * viewport_height;
-        let focal_length = 1.0;
 
-        let origin = vec3::Point3::zero();
-        let horizontal = vec3::Vec3::new(viewport_width, 0.0, 0.0);
-        let vertical = vec3::Vec3::new(0.0, viewport_height, 0.0);
-        let lower_left_corner =
-            origin - horizontal / 2.0 - vertical / 2.0 - vec3::Vec3::new(0.0, 0.0, focal_length);
+        let w = (lookfrom - lookat).unit();
+        let u = vup.cross(&w).unit();
+        let v = w.cross(&u);
+
+        let origin = lookfrom;
+        let horizontal = viewport_width * u;
+        let vertical = viewport_height * v;
+        let lower_left_corner = origin - horizontal / 2.0 - vertical / 2.0 - w;
 
         Camera {
             origin,
@@ -94,8 +98,29 @@ fn main() {
         -0.45, // negative radius for hollow sphere
         Rc::new(RefCell::new(material::Dielectric::new(1.5))),
     )));
+    // let r = f64::cos(std::f64::consts::PI / 4.0);
+    // world.add(Box::new(hittable::Sphere::new(
+    //     &Point3::new(-r, 0.0, -1.0),
+    //     r,
+    //     Rc::new(RefCell::new(material::Lambertian::new(&vec3::Color::new(
+    //         0.0, 0.0, 1.0,
+    //     )))),
+    // )));
+    // world.add(Box::new(hittable::Sphere::new(
+    //     &Point3::new(r, 0.0, -1.0),
+    //     r,
+    //     Rc::new(RefCell::new(material::Lambertian::new(&vec3::Color::new(
+    //         1.0, 0.0, 0.0,
+    //     )))),
+    // )));
 
-    let cam = Camera::new();
+    let cam = Camera::new(
+        vec3::Point3::new(-2.0, 2.0, 1.0),
+        vec3::Point3::new(0.0, 0.0, -1.0),
+        vec3::Vec3::new(0.0, 1.0, 0.0),
+        20.0,
+        aspect_ratio,
+    );
 
     let mut pb = progress::ProgressBar::new((width * height * samples_per_pixel) as usize);
     for j in (0..height).rev() {
