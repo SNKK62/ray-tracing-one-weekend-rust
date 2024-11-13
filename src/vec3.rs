@@ -87,6 +87,20 @@ impl Vec3 {
         Self::new(r * a.cos(), r * a.sin(), z)
     }
 
+    pub fn rand_in_unit_disk() -> Self {
+        let mut x = rand::thread_rng().gen_range(-1.0..1.0);
+        let mut y = rand::thread_rng().gen_range(-1.0..1.0);
+        loop {
+            if x * x + y * y >= 1.0 {
+                x = rand::thread_rng().gen_range(-1.0..1.0);
+                y = rand::thread_rng().gen_range(-1.0..1.0);
+            } else {
+                break;
+            }
+        }
+        Self::new(x, y, 0.0)
+    }
+
     pub fn x(&self) -> f64 {
         self.e[0]
     }

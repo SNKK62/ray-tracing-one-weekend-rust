@@ -16,6 +16,7 @@ pub struct Camera {
     lower_left_corner: vec3::Point3,
     horizontal: vec3::Vec3,
     vertical: vec3::Vec3,
+    lens_radius: f64,
 }
 
 impl Camera {
@@ -25,6 +26,8 @@ impl Camera {
         vup: vec3::Vec3,
         vfov: f64,
         aspect_ratio: f64,
+        aperture: f64,
+        focus_dist: f64,
     ) -> Self {
         let theta = degrees_to_radians(vfov);
         let h = f64::tan(theta / 2.0);
@@ -36,22 +39,27 @@ impl Camera {
         let v = w.cross(&u);
 
         let origin = lookfrom;
-        let horizontal = viewport_width * u;
-        let vertical = viewport_height * v;
-        let lower_left_corner = origin - horizontal / 2.0 - vertical / 2.0 - w;
+        let horizontal = focus_dist * viewport_width * u;
+        let vertical = focus_dist * viewport_height * v;
+        let lower_left_corner = origin - horizontal / 2.0 - vertical / 2.0 - focus_dist * w;
 
         Camera {
             origin,
             lower_left_corner,
             horizontal,
             vertical,
+            lens_radius: aperture / 2.0,
         }
     }
 
     pub fn get_ray(&self, u: f64, v: f64) -> Ray {
+        let rd = self.lens_radius * vec3::Vec3::rand_in_unit_disk();
+        let offset = vec3::Vec3::new(u * rd.x(), v * rd.y(), 0.0);
         Ray::new(
-            &self.origin,
-            &(self.lower_left_corner + u * self.horizontal + v * self.vertical - self.origin),
+            &(self.origin + offset),
+            &(self.lower_left_corner + u * self.horizontal + v * self.vertical
+                - self.origin
+                - offset),
         )
     }
 }
@@ -114,12 +122,18 @@ fn main() {
     //     )))),
     // )));
 
+    let lookfrom = vec3::Point3::new(3.0, 3.0, 2.0);
+    let lookat = vec3::Point3::new(0.0, 0.0, -1.0);
+    let dist_to_focus = (lookfrom - lookat).len();
+    let aperture = 2.0;
     let cam = Camera::new(
-        vec3::Point3::new(-2.0, 2.0, 1.0),
-        vec3::Point3::new(0.0, 0.0, -1.0),
+        lookfrom,
+        lookat,
         vec3::Vec3::new(0.0, 1.0, 0.0),
         20.0,
         aspect_ratio,
+        aperture,
+        dist_to_focus,
     );
 
     let mut pb = progress::ProgressBar::new((width * height * samples_per_pixel) as usize);
