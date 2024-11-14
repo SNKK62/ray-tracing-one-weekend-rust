@@ -8,4 +8,4 @@ It is based on the book ["Ray Tracing in One Weekend"](https://raytracing.github
 
 The output of the first week project is
 
-![output](./images/final.ppm)
+![output](./images/final.png)
