@@ -3,7 +3,7 @@ use ray_tracer_rs::{camera, progress, scene, vec3};
 
 fn main() {
     let aspect_ratio = 16.0 / 9.0;
-    let width = 512;
+    let width = 384;
     let height = (width as f64 / aspect_ratio) as i64;
     let samples_per_pixel = 1;
     let max_depth = 100;
