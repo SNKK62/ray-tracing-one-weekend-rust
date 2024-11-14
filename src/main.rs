@@ -1,7 +1,5 @@
-use std::{cell::RefCell, rc::Rc};
-
 use rand::Rng;
-use ray_tracer_rs::{camera, degrees_to_radians, progress, ray, scene, vec3};
+use ray_tracer_rs::{camera, progress, scene, vec3};
 
 fn main() {
     let aspect_ratio = 16.0 / 9.0;
