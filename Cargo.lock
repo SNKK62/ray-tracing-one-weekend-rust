@@ -89,7 +89,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ray-tracing-one-weekend-rust"
+name = "ray-tracer-rs"
 version = "0.1.0"
 dependencies = [
  "libc",

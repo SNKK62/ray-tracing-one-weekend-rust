@@ -1,4 +1,4 @@
-use crate::utils::clamp;
+use crate::clamp;
 use rand::Rng;
 use std::{
     fmt::{Display, Formatter, Result as FmtResult},
