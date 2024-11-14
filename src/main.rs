@@ -58,78 +58,112 @@ impl Camera {
         Ray::new(
             &(self.origin + offset),
             &(self.lower_left_corner + u * self.horizontal + v * self.vertical
-                - self.origin
-                - offset),
+                - (self.origin + offset)),
         )
     }
 }
 
+fn random_scene() -> hittable::HittableList {
+    let mut world = hittable::HittableList::new();
+    let ground_material = Rc::new(RefCell::new(material::Lambertian::new(&vec3::Color::new(
+        0.5, 0.5, 0.5,
+    ))));
+    world.add(Box::new(hittable::Sphere::new(
+        &Point3::new(0.0, -1000.0, 0.0),
+        1000.0,
+        ground_material.clone(),
+    )));
+
+    for a in -11..11 {
+        for b in -11..11 {
+            let choose_mat = rand::thread_rng().gen_range(0.0..1.0);
+            let center = Point3::new(
+                (a as f64) + 0.9 * rand::thread_rng().gen_range(0.0..1.0),
+                0.2,
+                (b as f64) + 0.9 * rand::thread_rng().gen_range(0.0..1.0),
+            );
+
+            let radius = 0.2;
+            if (center - Point3::new(4.0, radius, 0.0)).len() > 0.9 {
+                let sphere_material: Rc<RefCell<dyn material::Material>>;
+                if choose_mat < 0.7 {
+                    // diffuse
+                    let albedo = vec3::Color::rand() * vec3::Color::rand();
+                    sphere_material = Rc::new(RefCell::new(material::Lambertian::new(&albedo)));
+                    world.add(Box::new(hittable::Sphere::new(
+                        &center,
+                        radius,
+                        sphere_material,
+                    )));
+                } else if choose_mat < 0.85 {
+                    // metal
+                    let albedo = vec3::Color::rand_range(0.5, 1.0);
+                    let fuzz = rand::thread_rng().gen_range(0.0..0.5);
+                    sphere_material = Rc::new(RefCell::new(material::Metal::new(&albedo, fuzz)));
+                    world.add(Box::new(hittable::Sphere::new(
+                        &center,
+                        radius,
+                        sphere_material,
+                    )));
+                } else {
+                    // glass
+                    sphere_material = Rc::new(RefCell::new(material::Dielectric::new(1.5)));
+                    world.add(Box::new(hittable::Sphere::new(
+                        &center,
+                        radius,
+                        sphere_material,
+                    )));
+                }
+            }
+        }
+    }
+
+    let material1 = Rc::new(RefCell::new(material::Dielectric::new(1.5)));
+    world.add(Box::new(hittable::Sphere::new(
+        &Point3::new(0.0, 1.0, 0.0),
+        1.0,
+        material1,
+    )));
+    let material2 = Rc::new(RefCell::new(material::Lambertian::new(&vec3::Color::new(
+        0.4, 0.2, 0.1,
+    ))));
+    world.add(Box::new(hittable::Sphere::new(
+        &Point3::new(-4.0, 1.0, 0.0),
+        1.0,
+        material2,
+    )));
+    let material3 = Rc::new(RefCell::new(material::Metal::new(
+        &vec3::Color::new(0.7, 0.6, 0.5),
+        0.0,
+    )));
+    world.add(Box::new(hittable::Sphere::new(
+        &Point3::new(4.0, 1.0, 0.0),
+        1.0,
+        material3,
+    )));
+    world
+}
+
 fn main() {
     let aspect_ratio = 16.0 / 9.0;
-    let width = 384;
+    let width = 512;
     let height = (width as f64 / aspect_ratio) as i64;
-    let samples_per_pixel = 100;
+    let samples_per_pixel = 500;
     let max_depth = 100;
 
     print!("P3\n{} {}\n255\n", width, height);
 
-    let mut world = hittable::HittableList::new();
-    world.add(Box::new(hittable::Sphere::new(
-        &Point3::new(0.0, 0.0, -1.0),
-        0.5,
-        Rc::new(RefCell::new(material::Lambertian::new(&vec3::Color::new(
-            0.1, 0.2, 0.5,
-        )))),
-    )));
-    world.add(Box::new(hittable::Sphere::new(
-        &Point3::new(0.0, -100.5, -1.0),
-        100.0,
-        Rc::new(RefCell::new(material::Lambertian::new(&vec3::Color::new(
-            0.8, 0.8, 0.0,
-        )))),
-    )));
-    world.add(Box::new(hittable::Sphere::new(
-        &Point3::new(1.0, 0.0, -1.0),
-        0.5,
-        Rc::new(RefCell::new(material::Metal::new(
-            &vec3::Color::new(0.8, 0.6, 0.2),
-            0.0,
-        ))),
-    )));
-    world.add(Box::new(hittable::Sphere::new(
-        &Point3::new(-1.0, 0.0, -1.0),
-        0.5,
-        Rc::new(RefCell::new(material::Dielectric::new(1.5))),
-    )));
-    world.add(Box::new(hittable::Sphere::new(
-        &Point3::new(-1.0, 0.0, -1.0),
-        -0.45, // negative radius for hollow sphere
-        Rc::new(RefCell::new(material::Dielectric::new(1.5))),
-    )));
-    // let r = f64::cos(std::f64::consts::PI / 4.0);
-    // world.add(Box::new(hittable::Sphere::new(
-    //     &Point3::new(-r, 0.0, -1.0),
-    //     r,
-    //     Rc::new(RefCell::new(material::Lambertian::new(&vec3::Color::new(
-    //         0.0, 0.0, 1.0,
-    //     )))),
-    // )));
-    // world.add(Box::new(hittable::Sphere::new(
-    //     &Point3::new(r, 0.0, -1.0),
-    //     r,
-    //     Rc::new(RefCell::new(material::Lambertian::new(&vec3::Color::new(
-    //         1.0, 0.0, 0.0,
-    //     )))),
-    // )));
+    let world = random_scene();
 
-    let lookfrom = vec3::Point3::new(3.0, 3.0, 2.0);
-    let lookat = vec3::Point3::new(0.0, 0.0, -1.0);
-    let dist_to_focus = (lookfrom - lookat).len();
-    let aperture = 2.0;
+    let lookfrom = vec3::Point3::new(13.0, 2.0, 3.0);
+    let lookat = vec3::Point3::new(0.0, 0.0, 0.0);
+    let vup = vec3::Vec3::new(0.0, 1.0, 0.0);
+    let dist_to_focus = 10.0;
+    let aperture = 0.1;
     let cam = Camera::new(
         lookfrom,
         lookat,
-        vec3::Vec3::new(0.0, 1.0, 0.0),
+        vup,
         20.0,
         aspect_ratio,
         aperture,
