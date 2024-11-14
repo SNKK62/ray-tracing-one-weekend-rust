@@ -26,13 +26,13 @@ impl Lambertian {
 impl Material for Lambertian {
     fn scatter(
         &self,
-        _r_in: &ray::Ray,
+        r_in: &ray::Ray,
         rec: &hittable::HitRecord,
         attenuation: &mut vec3::Color,
         scattered: &mut ray::Ray,
     ) -> bool {
         let scatter_direction = rec.normal + vec3::Vec3::rand_unit_vector();
-        *scattered = ray::Ray::new(&rec.p, &scatter_direction);
+        *scattered = ray::Ray::new(&rec.p, &scatter_direction, r_in.time);
         *attenuation = self.albedo;
         true
     }
@@ -68,6 +68,7 @@ impl Material for Metal {
         *scattered = ray::Ray::new(
             &rec.p,
             &(reflected + self.fuzz * vec3::Vec3::rand_unit_sphere()),
+            r_in.time,
         );
         *attenuation = self.albedo;
         scattered.direction.dot(&rec.normal) > 0.0
@@ -117,21 +118,17 @@ impl Material for Dielectric {
             panic!("cos_theta must be positive!");
         }
         let sin_theta = (1.0 - cos_theta * cos_theta).sqrt();
-        if etai_over_etat * sin_theta > 1.0 {
-            // Must reflect
+        if etai_over_etat * sin_theta > 1.0
+            || rand::thread_rng().gen_range(0.0..1.0) < schlick(cos_theta, etai_over_etat)
+        {
+            // Must reflect if total internal reflection
+            // Can reflect if Schlick says so
             let reflected = reflect(&unit_direction, &rec.normal);
-            *scattered = ray::Ray::new(&rec.p, &reflected);
-            return true;
-        }
-        // Can refract
-        let reflect_prob = schlick(cos_theta, etai_over_etat);
-        if rand::thread_rng().gen_range(0.0..1.0) < reflect_prob {
-            let reflected = reflect(&unit_direction, &rec.normal);
-            *scattered = ray::Ray::new(&rec.p, &reflected);
+            *scattered = ray::Ray::new(&rec.p, &reflected, r_in.time);
             return true;
         }
         let refracted = refract(&unit_direction, &rec.normal, etai_over_etat);
-        *scattered = ray::Ray::new(&rec.p, &refracted);
+        *scattered = ray::Ray::new(&rec.p, &refracted, r_in.time);
         true
     }
 }

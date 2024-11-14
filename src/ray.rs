@@ -4,13 +4,15 @@ use crate::vec3;
 pub struct Ray {
     pub origin: vec3::Point3,
     pub direction: vec3::Vec3,
+    pub time: f64,
 }
 
 impl Ray {
-    pub fn new(origin: &vec3::Point3, direction: &vec3::Vec3) -> Self {
+    pub fn new(origin: &vec3::Point3, direction: &vec3::Vec3, time: f64) -> Self {
         Ray {
             origin: *origin,
             direction: *direction,
+            time,
         }
     }
 
@@ -25,7 +27,7 @@ impl Ray {
 
         let mut rec = hittable::HitRecord::new();
         if world.hit(self, 0.001, f64::INFINITY, &mut rec) {
-            let mut scattered = Self::new(&rec.p, &rec.normal);
+            let mut scattered = Self::new(&rec.p, &rec.normal, 0.0);
             let mut attenuation = vec3::Color::zero();
             if rec.material.clone().unwrap().borrow().scatter(
                 // NOTE: rec.material is set in hit()

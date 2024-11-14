@@ -3,7 +3,7 @@ pub mod hittable;
 pub mod material;
 pub mod progress;
 pub mod ray;
-pub mod scene;
+pub mod scenes;
 pub mod vec3;
 
 pub fn degrees_to_radians(degrees: f64) -> f64 {
