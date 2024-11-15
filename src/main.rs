@@ -1,5 +1,5 @@
 use rand::Rng;
-use ray_tracer_rs::{camera, progress, scenes, vec3};
+use ray_tracer_rs::{camera, hittable, progress, scenes, vec3};
 
 fn main() {
     let aspect_ratio = 16.0 / 9.0;
@@ -11,7 +11,8 @@ fn main() {
 
     print!("P3\n{} {}\n255\n", width, height);
 
-    let world = scenes::random_moving::random_scene();
+    let mut world = scenes::random::random_scene();
+    let world = hittable::BvhNode::new(&mut world.objects, 0.0, 1.0);
 
     let lookfrom = vec3::Point3::new(13.0, 2.0, 3.0);
     let lookat = vec3::Point3::new(0.0, 0.0, 0.0);

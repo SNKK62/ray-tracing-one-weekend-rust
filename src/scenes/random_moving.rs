@@ -9,7 +9,7 @@ pub fn random_scene() -> hittable::HittableList {
     let ground_material = Rc::new(RefCell::new(material::Lambertian::new(&Color::new(
         0.5, 0.5, 0.5,
     ))));
-    world.add(Box::new(hittable::Sphere::new(
+    world.add(Rc::new(hittable::Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
         1000.0,
         ground_material.clone(),
@@ -33,7 +33,7 @@ pub fn random_scene() -> hittable::HittableList {
                     sphere_material = Rc::new(RefCell::new(material::Lambertian::new(&albedo)));
                     let center2 =
                         center + Point3::new(0.0, rand::thread_rng().gen_range(0.0..0.5), 0.0);
-                    world.add(Box::new(hittable::MovingSphere::new(
+                    world.add(Rc::new(hittable::MovingSphere::new(
                         &center,
                         &center2,
                         radius,
@@ -46,7 +46,7 @@ pub fn random_scene() -> hittable::HittableList {
                     let albedo = Color::rand_range(0.5, 1.0);
                     let fuzz = rand::thread_rng().gen_range(0.0..0.5);
                     sphere_material = Rc::new(RefCell::new(material::Metal::new(&albedo, fuzz)));
-                    world.add(Box::new(hittable::Sphere::new(
+                    world.add(Rc::new(hittable::Sphere::new(
                         &center,
                         radius,
                         sphere_material,
@@ -54,7 +54,7 @@ pub fn random_scene() -> hittable::HittableList {
                 } else {
                     // glass
                     sphere_material = Rc::new(RefCell::new(material::Dielectric::new(1.5)));
-                    world.add(Box::new(hittable::Sphere::new(
+                    world.add(Rc::new(hittable::Sphere::new(
                         &center,
                         radius,
                         sphere_material,
@@ -65,7 +65,7 @@ pub fn random_scene() -> hittable::HittableList {
     }
 
     let material1 = Rc::new(RefCell::new(material::Dielectric::new(1.5)));
-    world.add(Box::new(hittable::Sphere::new(
+    world.add(Rc::new(hittable::Sphere::new(
         &Point3::new(0.0, 1.0, 0.0),
         1.0,
         material1,
@@ -73,7 +73,7 @@ pub fn random_scene() -> hittable::HittableList {
     let material2 = Rc::new(RefCell::new(material::Lambertian::new(&Color::new(
         0.4, 0.2, 0.1,
     ))));
-    world.add(Box::new(hittable::Sphere::new(
+    world.add(Rc::new(hittable::Sphere::new(
         &Point3::new(-4.0, 1.0, 0.0),
         1.0,
         material2,
@@ -82,7 +82,7 @@ pub fn random_scene() -> hittable::HittableList {
         &Color::new(0.7, 0.6, 0.5),
         0.0,
     )));
-    world.add(Box::new(hittable::Sphere::new(
+    world.add(Rc::new(hittable::Sphere::new(
         &Point3::new(4.0, 1.0, 0.0),
         1.0,
         material3,
