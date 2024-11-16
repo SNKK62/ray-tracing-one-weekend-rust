@@ -1,15 +1,15 @@
-use crate::hittable;
+use crate::hittable::{bvh::BvhNode, hittable_list::HittableList, sphere::Sphere, Hittable};
 use crate::material;
 use crate::vec3::{Color, Point3};
 use rand::Rng;
 use std::{cell::RefCell, rc::Rc};
 
-pub fn random_scene() -> hittable::HittableList {
-    let mut world = hittable::HittableList::new();
+pub fn random_scene() -> HittableList {
+    let mut world: Vec<Rc<dyn Hittable>> = Vec::new();
     let ground_material = Rc::new(RefCell::new(material::Lambertian::new(&Color::new(
         0.5, 0.5, 0.5,
     ))));
-    world.add(Rc::new(hittable::Sphere::new(
+    world.push(Rc::new(Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
         1000.0,
         ground_material.clone(),
@@ -31,36 +31,24 @@ pub fn random_scene() -> hittable::HittableList {
                     // diffuse
                     let albedo = Color::rand() * Color::rand();
                     sphere_material = Rc::new(RefCell::new(material::Lambertian::new(&albedo)));
-                    world.add(Rc::new(hittable::Sphere::new(
-                        &center,
-                        radius,
-                        sphere_material,
-                    )));
+                    world.push(Rc::new(Sphere::new(&center, radius, sphere_material)));
                 } else if choose_mat < 0.85 {
                     // metal
                     let albedo = Color::rand_range(0.5, 1.0);
                     let fuzz = rand::thread_rng().gen_range(0.0..0.5);
                     sphere_material = Rc::new(RefCell::new(material::Metal::new(&albedo, fuzz)));
-                    world.add(Rc::new(hittable::Sphere::new(
-                        &center,
-                        radius,
-                        sphere_material,
-                    )));
+                    world.push(Rc::new(Sphere::new(&center, radius, sphere_material)));
                 } else {
                     // glass
                     sphere_material = Rc::new(RefCell::new(material::Dielectric::new(1.5)));
-                    world.add(Rc::new(hittable::Sphere::new(
-                        &center,
-                        radius,
-                        sphere_material,
-                    )));
+                    world.push(Rc::new(Sphere::new(&center, radius, sphere_material)));
                 }
             }
         }
     }
 
     let material1 = Rc::new(RefCell::new(material::Dielectric::new(1.5)));
-    world.add(Rc::new(hittable::Sphere::new(
+    world.push(Rc::new(Sphere::new(
         &Point3::new(0.0, 1.0, 0.0),
         1.0,
         material1,
@@ -68,7 +56,7 @@ pub fn random_scene() -> hittable::HittableList {
     let material2 = Rc::new(RefCell::new(material::Lambertian::new(&Color::new(
         0.4, 0.2, 0.1,
     ))));
-    world.add(Rc::new(hittable::Sphere::new(
+    world.push(Rc::new(Sphere::new(
         &Point3::new(-4.0, 1.0, 0.0),
         1.0,
         material2,
@@ -77,10 +65,13 @@ pub fn random_scene() -> hittable::HittableList {
         &Color::new(0.7, 0.6, 0.5),
         0.0,
     )));
-    world.add(Rc::new(hittable::Sphere::new(
+    world.push(Rc::new(Sphere::new(
         &Point3::new(4.0, 1.0, 0.0),
         1.0,
         material3,
     )));
+    let bvh = BvhNode::new(&mut world, 0.0, 1.0);
+    let mut world = HittableList::new();
+    world.add(Rc::new(bvh));
     world
 }
