@@ -5,7 +5,7 @@ use crate::vec3::{Color, Point3};
 use rand::Rng;
 use std::{cell::RefCell, rc::Rc};
 
-pub fn random_scene() -> HittableList {
+pub fn scene() -> HittableList {
     let mut world = HittableList::new();
     let ground_material = Rc::new(RefCell::new(material::Lambertian::new(Box::new(
         SolidColor::new(Color::new(0.5, 0.5, 0.5)),

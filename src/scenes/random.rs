@@ -1,15 +1,17 @@
 use crate::hittable::{BvhNode, Hittable, HittableList, Sphere};
 use crate::material::{Dielectric, Lambertian, Material, Metal};
-use crate::texture::SolidColor;
+use crate::texture::{Checker, SolidColor};
 use crate::vec3::{Color, Point3};
 use rand::Rng;
 use std::{boxed::Box, cell::RefCell, rc::Rc};
 
-pub fn random_scene() -> HittableList {
+pub fn scene() -> HittableList {
     let mut world: Vec<Rc<dyn Hittable>> = Vec::new();
-    let ground_material = Rc::new(RefCell::new(Lambertian::new(Box::new(SolidColor::new(
-        Color::new(0.5, 0.5, 0.5),
-    )))));
+    let checker = Checker::new(
+        Box::new(SolidColor::new(Color::new(0.2, 0.3, 0.1))),
+        Box::new(SolidColor::new(Color::new(0.9, 0.9, 0.9))),
+    );
+    let ground_material = Rc::new(RefCell::new(Lambertian::new(Box::new(checker))));
     world.push(Rc::new(Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
         1000.0,
