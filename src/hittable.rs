@@ -6,12 +6,28 @@ use crate::ray;
 use crate::vec3;
 
 pub mod aabb;
-pub mod bvh;
-pub mod hittable_list;
-pub mod moving_sphere;
-pub mod sphere;
+pub use aabb::AABB;
 
-use aabb::AABB;
+pub mod bvh;
+pub use bvh::BvhNode;
+
+pub mod hittable_list;
+pub use hittable_list::HittableList;
+
+pub mod moving_sphere;
+pub use moving_sphere::MovingSphere;
+
+pub mod sphere;
+pub use sphere::Sphere;
+
+fn get_sphere_uv(p: &vec3::Point3) -> (f64, f64) {
+    let pi = std::f64::consts::PI;
+    let phi = f64::atan2(p.z(), p.x());
+    let theta = f64::asin(p.y());
+    let u = 1.0 - (phi + pi) / (2.0 * pi);
+    let v = (theta + pi / 2.0) / pi;
+    (u, v)
+}
 
 #[derive(Clone)]
 pub struct HitRecord {
@@ -19,6 +35,8 @@ pub struct HitRecord {
     pub normal: vec3::Vec3,
     pub material: Option<Rc<RefCell<dyn material::Material>>>,
     pub t: f64,
+    pub u: f64,
+    pub v: f64,
     pub front_face: bool,
 }
 
@@ -35,6 +53,8 @@ impl HitRecord {
             normal: vec3::Vec3::zero(),
             material: None,
             t: 0.0,
+            u: 0.0,
+            v: 0.0,
             front_face: false,
         }
     }

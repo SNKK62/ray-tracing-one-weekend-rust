@@ -1,13 +1,14 @@
 use crate::hittable::{hittable_list::HittableList, moving_sphere::MovingSphere, sphere::Sphere};
 use crate::material;
+use crate::texture::SolidColor;
 use crate::vec3::{Color, Point3};
 use rand::Rng;
 use std::{cell::RefCell, rc::Rc};
 
 pub fn random_scene() -> HittableList {
     let mut world = HittableList::new();
-    let ground_material = Rc::new(RefCell::new(material::Lambertian::new(&Color::new(
-        0.5, 0.5, 0.5,
+    let ground_material = Rc::new(RefCell::new(material::Lambertian::new(Box::new(
+        SolidColor::new(Color::new(0.5, 0.5, 0.5)),
     ))));
     world.add(Rc::new(Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
@@ -30,7 +31,9 @@ pub fn random_scene() -> HittableList {
                 if choose_mat < 0.7 {
                     // diffuse
                     let albedo = Color::rand() * Color::rand();
-                    sphere_material = Rc::new(RefCell::new(material::Lambertian::new(&albedo)));
+                    sphere_material = Rc::new(RefCell::new(material::Lambertian::new(Box::new(
+                        SolidColor::new(albedo),
+                    ))));
                     let center2 =
                         center + Point3::new(0.0, rand::thread_rng().gen_range(0.0..0.5), 0.0);
                     world.add(Rc::new(MovingSphere::new(
@@ -62,8 +65,8 @@ pub fn random_scene() -> HittableList {
         1.0,
         material1,
     )));
-    let material2 = Rc::new(RefCell::new(material::Lambertian::new(&Color::new(
-        0.4, 0.2, 0.1,
+    let material2 = Rc::new(RefCell::new(material::Lambertian::new(Box::new(
+        SolidColor::new(Color::new(0.4, 0.2, 0.1)),
     ))));
     world.add(Rc::new(Sphere::new(
         &Point3::new(-4.0, 1.0, 0.0),
