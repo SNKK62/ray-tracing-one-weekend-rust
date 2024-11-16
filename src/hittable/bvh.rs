@@ -69,7 +69,7 @@ impl BvhNode {
                 right = first;
             }
         } else {
-            objects.sort_by(comparator);
+            objects[start..end].sort_by(comparator);
             let mid = start + object_span / 2;
             left = Rc::new(BvhNode::create(objects, start, mid, time0, time1));
             right = Rc::new(BvhNode::create(objects, mid, end, time0, time1));
