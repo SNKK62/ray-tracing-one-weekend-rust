@@ -356,7 +356,7 @@ impl BvhNode {
         if object_span == 1 {
             // assign the same object to both left and right
             left = objects.get(start).unwrap().clone();
-            right = objects.get(start + 1).unwrap().clone();
+            right = objects.get(start).unwrap().clone();
         } else if object_span == 2 {
             // assign the first object to left and the second object to right
             let first = objects.get(start).unwrap().clone();

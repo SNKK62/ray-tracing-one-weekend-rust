@@ -1,18 +1,21 @@
 use rand::Rng;
 use ray_tracer_rs::{camera, hittable, progress, scenes, vec3};
+use std::rc::Rc;
 
 fn main() {
     let aspect_ratio = 16.0 / 9.0;
     // let width = 384;
     let width = 512;
     let height = (width as f64 / aspect_ratio) as i64;
-    let samples_per_pixel = 100;
+    let samples_per_pixel = 10;
     let max_depth = 100;
 
     print!("P3\n{} {}\n255\n", width, height);
 
-    let mut world = scenes::random::random_scene();
-    let world = hittable::BvhNode::new(&mut world.objects, 0.0, 1.0);
+    let world = scenes::random::random_scene();
+    let mut objects: Vec<Rc<dyn hittable::Hittable>> = Vec::new();
+    objects.push(Rc::new(world));
+    let world = hittable::BvhNode::new(&mut objects, 0.0, 1.0);
 
     let lookfrom = vec3::Point3::new(13.0, 2.0, 3.0);
     let lookat = vec3::Point3::new(0.0, 0.0, 0.0);
