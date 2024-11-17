@@ -54,6 +54,7 @@ impl Perlin {
         let mut u = p.x() - i;
         let mut v = p.y() - j;
         let mut w = p.z() - k;
+        // Hermite interpolation
         u = u * u * (3.0 - 2.0 * u);
         v = v * v * (3.0 - 2.0 * v);
         w = w * w * (3.0 - 2.0 * w);

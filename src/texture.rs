@@ -10,6 +10,9 @@ pub use checker::Checker;
 pub mod noise_texture;
 pub use noise_texture::NoiseTexture;
 
+pub mod image_texture;
+pub use image_texture::ImageTexture;
+
 pub trait Texture {
     fn value(&self, u: f64, v: f64, p: &Vec3) -> Color;
 }

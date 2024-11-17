@@ -20,6 +20,7 @@ pub use moving_sphere::MovingSphere;
 pub mod sphere;
 pub use sphere::Sphere;
 
+/// p should be a unit sphere
 fn get_sphere_uv(p: &vec3::Point3) -> (f64, f64) {
     let pi = std::f64::consts::PI;
     let phi = f64::atan2(p.z(), p.x());

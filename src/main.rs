@@ -11,7 +11,7 @@ fn main() {
 
     print!("P3\n{} {}\n255\n", width, height);
 
-    let world = scenes::two_perlin_spheres::scene();
+    let world = scenes::earthball::scene();
 
     let lookfrom = vec3::Point3::new(13.0, 2.0, 3.0);
     let lookat = vec3::Point3::new(0.0, 0.0, 0.0);

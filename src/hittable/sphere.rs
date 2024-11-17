@@ -37,6 +37,10 @@ impl Hittable for Sphere {
             if temp < t_max && temp > t_min {
                 record.t = temp;
                 record.p = r.at(record.t);
+                let (sphere_u, sphere_v) =
+                    super::get_sphere_uv(&((record.p - self.center) / self.radius));
+                record.u = sphere_u;
+                record.v = sphere_v;
                 let outward_normal = (record.p - self.center) / self.radius;
                 self.set_front_face(r, &outward_normal, record);
                 record.material = Some(Rc::clone(&self.material));
@@ -46,6 +50,10 @@ impl Hittable for Sphere {
             if temp < t_max && temp > t_min {
                 record.t = temp;
                 record.p = r.at(record.t);
+                let (sphere_u, sphere_v) =
+                    super::get_sphere_uv(&((record.p - self.center) / self.radius));
+                record.u = sphere_u;
+                record.v = sphere_v;
                 let outward_normal = (record.p - self.center) / self.radius;
                 self.set_front_face(r, &outward_normal, record);
                 record.material = Some(Rc::clone(&self.material));
