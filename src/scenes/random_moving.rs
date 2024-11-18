@@ -7,7 +7,7 @@ use std::{cell::RefCell, rc::Rc};
 
 pub fn scene() -> HittableList {
     let mut world = HittableList::new();
-    let ground_material = Rc::new(RefCell::new(material::Lambertian::new(Box::new(
+    let ground_material = Rc::new(RefCell::new(material::Lambertian::new(Rc::new(
         SolidColor::new(Color::new(0.5, 0.5, 0.5)),
     ))));
     world.add(Rc::new(Sphere::new(
@@ -31,7 +31,7 @@ pub fn scene() -> HittableList {
                 if choose_mat < 0.7 {
                     // diffuse
                     let albedo = Color::rand() * Color::rand();
-                    sphere_material = Rc::new(RefCell::new(material::Lambertian::new(Box::new(
+                    sphere_material = Rc::new(RefCell::new(material::Lambertian::new(Rc::new(
                         SolidColor::new(albedo),
                     ))));
                     let center2 =
@@ -65,7 +65,7 @@ pub fn scene() -> HittableList {
         1.0,
         material1,
     )));
-    let material2 = Rc::new(RefCell::new(material::Lambertian::new(Box::new(
+    let material2 = Rc::new(RefCell::new(material::Lambertian::new(Rc::new(
         SolidColor::new(Color::new(0.4, 0.2, 0.1)),
     ))));
     world.add(Rc::new(Sphere::new(

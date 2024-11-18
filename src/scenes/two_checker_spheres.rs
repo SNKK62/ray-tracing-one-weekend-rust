@@ -11,7 +11,7 @@ pub fn scene() -> HittableList {
         Box::new(SolidColor::new(Color::new(0.9, 0.9, 0.9))),
     );
 
-    let sphere_material = Rc::new(RefCell::new(Lambertian::new(Box::new(checker))));
+    let sphere_material = Rc::new(RefCell::new(Lambertian::new(Rc::new(checker))));
     world.push(Rc::new(Sphere::new(
         &Point3::new(0.0, -10.0, 0.0),
         10.0,

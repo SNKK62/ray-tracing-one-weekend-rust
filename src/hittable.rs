@@ -20,6 +20,13 @@ pub use moving_sphere::MovingSphere;
 pub mod sphere;
 pub use sphere::Sphere;
 
+pub mod xy_rect;
+pub use xy_rect::XYRect;
+pub mod xz_rect;
+pub use xz_rect::XZRect;
+pub mod yz_rect;
+pub use yz_rect::YZRect;
+
 /// p should be a unit sphere
 fn get_sphere_uv(p: &vec3::Point3) -> (f64, f64) {
     let pi = std::f64::consts::PI;

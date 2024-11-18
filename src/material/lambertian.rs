@@ -1,14 +1,15 @@
 use super::Material;
 use crate::texture::Texture;
 use crate::{hittable, ray, vec3};
-use std::boxed::Box;
+use std::rc::Rc;
 
+#[derive(Clone)]
 pub struct Lambertian {
-    albedo: Box<dyn Texture>,
+    albedo: Rc<dyn Texture>,
 }
 
 impl Lambertian {
-    pub fn new(albedo: Box<dyn Texture>) -> Self {
+    pub fn new(albedo: Rc<dyn Texture>) -> Self {
         Self { albedo }
     }
 }

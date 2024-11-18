@@ -11,6 +11,9 @@ pub use lambertian::Lambertian;
 pub mod metal;
 pub use metal::Metal;
 
+pub mod diffuse_light;
+pub use diffuse_light::DiffuseLight;
+
 pub trait Material {
     fn scatter(
         &self,
@@ -19,6 +22,9 @@ pub trait Material {
         attenuation: &mut vec3::Color,
         scattered: &mut ray::Ray,
     ) -> bool;
+    fn emitted(&self, _u: f64, _v: f64, _p: &crate::vec3::Point3) -> crate::vec3::Color {
+        vec3::Color::zero()
+    }
 }
 
 fn refract(uv: &vec3::Vec3, n: &vec3::Vec3, etai_over_etat: f64) -> vec3::Vec3 {

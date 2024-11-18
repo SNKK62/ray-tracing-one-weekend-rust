@@ -11,7 +11,7 @@ pub fn scene() -> HittableList {
         Box::new(SolidColor::new(Color::new(0.2, 0.3, 0.1))),
         Box::new(SolidColor::new(Color::new(0.9, 0.9, 0.9))),
     );
-    let ground_material = Rc::new(RefCell::new(Lambertian::new(Box::new(checker))));
+    let ground_material = Rc::new(RefCell::new(Lambertian::new(Rc::new(checker))));
     world.push(Rc::new(Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
         1000.0,
@@ -33,7 +33,7 @@ pub fn scene() -> HittableList {
                 if choose_mat < 0.7 {
                     // diffuse
                     let albedo = Color::rand() * Color::rand();
-                    sphere_material = Rc::new(RefCell::new(Lambertian::new(Box::new(
+                    sphere_material = Rc::new(RefCell::new(Lambertian::new(Rc::new(
                         SolidColor::new(albedo),
                     ))));
                     world.push(Rc::new(Sphere::new(&center, radius, sphere_material)));
@@ -58,7 +58,7 @@ pub fn scene() -> HittableList {
         1.0,
         material1,
     )));
-    let material2 = Rc::new(RefCell::new(Lambertian::new(Box::new(SolidColor::new(
+    let material2 = Rc::new(RefCell::new(Lambertian::new(Rc::new(SolidColor::new(
         Color::new(0.4, 0.2, 0.1),
     )))));
     world.push(Rc::new(Sphere::new(

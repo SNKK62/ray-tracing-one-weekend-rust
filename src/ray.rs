@@ -20,29 +20,38 @@ impl Ray {
         self.origin + self.direction * t
     }
 
-    pub fn color(&self, world: &dyn hittable::Hittable, depth: usize) -> vec3::Color {
+    pub fn color(
+        &self,
+        background: &vec3::Color,
+        world: &dyn hittable::Hittable,
+        depth: usize,
+    ) -> vec3::Color {
         if depth == 0 {
             return vec3::Color::zero();
         }
 
         let mut rec = hittable::HitRecord::new();
-        if world.hit(self, 0.001, f64::INFINITY, &mut rec) {
-            let mut scattered = Self::new(&rec.p, &rec.normal, 0.0);
-            let mut attenuation = vec3::Color::zero();
-            if rec.material.clone().unwrap().borrow().scatter(
-                // NOTE: rec.material is set in hit()
-                self,
-                &rec,
-                &mut attenuation,
-                &mut scattered,
-            ) {
-                return attenuation * scattered.color(world, depth - 1);
-            }
-            return vec3::Color::zero();
+        if !world.hit(self, 0.001, f64::INFINITY, &mut rec) {
+            return *background;
         }
 
-        let unit_direction = self.direction.unit();
-        let t = 0.5 * (unit_direction.y() + 1.0);
-        (1.0 - t) * vec3::Color::new(1.0, 1.0, 1.0) + t * vec3::Color::new(0.5, 0.7, 1.0)
+        let mat = rec.clone().material;
+        if mat.is_none() {
+            panic!("Material is None");
+        }
+        let mat = mat.unwrap();
+
+        let emitted = mat.borrow().emitted(rec.u, rec.v, &rec.p);
+        let mut scattered = Self::new(&rec.p, &rec.normal, 0.0); // Temporary Ray
+        let mut attenuation = vec3::Color::zero();
+
+        if !mat
+            .borrow()
+            .scatter(self, &rec, &mut attenuation, &mut scattered)
+        {
+            return emitted;
+        }
+
+        emitted + attenuation * scattered.color(background, world, depth - 1)
     }
 }
