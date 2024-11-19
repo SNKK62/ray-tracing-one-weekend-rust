@@ -33,8 +33,12 @@ pub use cuboid::Cuboid;
 pub mod translation;
 pub use translation::Translation;
 
+pub mod rotate_x;
+pub use rotate_x::RotateX;
 pub mod rotate_y;
 pub use rotate_y::RotateY;
+pub mod rotate_z;
+pub use rotate_z::RotateZ;
 
 /// p should be a unit sphere
 fn get_sphere_uv(p: &vec3::Point3) -> (f64, f64) {
