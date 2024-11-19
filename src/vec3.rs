@@ -2,7 +2,7 @@ use crate::clamp;
 use rand::Rng;
 use std::{
     fmt::{Display, Formatter, Result as FmtResult},
-    ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub, SubAssign},
+    ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub, SubAssign},
 };
 
 #[derive(Clone, Copy, Debug)]
@@ -154,6 +154,15 @@ impl Index<usize> for Vec3 {
             panic!("Index out of bounds");
         }
         &self.e[i]
+    }
+}
+
+impl IndexMut<usize> for Vec3 {
+    fn index_mut(&mut self, i: usize) -> &mut f64 {
+        if i >= self.e.len() {
+            panic!("Index out of bounds");
+        }
+        &mut self.e[i]
     }
 }
 

@@ -7,7 +7,7 @@ fn main() {
     // let width = 384;
     let width = 512;
     let height = (width as f64 / aspect_ratio) as i64;
-    let samples_per_pixel = 100;
+    let samples_per_pixel = 1000;
     let max_depth = 100;
 
     print!("P3\n{} {}\n255\n", width, height);

@@ -27,6 +27,15 @@ pub use xz_rect::XZRect;
 pub mod yz_rect;
 pub use yz_rect::YZRect;
 
+pub mod cuboid;
+pub use cuboid::Cuboid;
+
+pub mod translation;
+pub use translation::Translation;
+
+pub mod rotate_y;
+pub use rotate_y::RotateY;
+
 /// p should be a unit sphere
 fn get_sphere_uv(p: &vec3::Point3) -> (f64, f64) {
     let pi = std::f64::consts::PI;

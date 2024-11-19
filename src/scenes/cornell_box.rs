@@ -1,4 +1,6 @@
-use crate::hittable::{BvhNode, Hittable, HittableList, XYRect, XZRect, YZRect};
+use crate::hittable::{
+    BvhNode, Cuboid, Hittable, HittableList, RotateY, Translation, XYRect, XZRect, YZRect,
+};
 use crate::material::{DiffuseLight, Lambertian};
 use crate::texture::SolidColor;
 use crate::vec3::Color;
@@ -60,6 +62,24 @@ pub fn scene() -> HittableList {
         555.0,
         Rc::new(RefCell::new(white.clone())),
     )));
+    // Box
+    let cuboid = Cuboid::new(
+        &crate::vec3::Point3::new(0.0, 0.0, 0.0),
+        &crate::vec3::Point3::new(165.0, 330.0, 165.0),
+        Rc::new(RefCell::new(white.clone())),
+    );
+    let cuboid = RotateY::new(Rc::new(cuboid), 15.0);
+    let cuboid = Translation::new(Rc::new(cuboid), crate::vec3::Vec3::new(265.0, 0.0, 295.0));
+    world.push(Rc::new(cuboid));
+
+    let cuboid = Cuboid::new(
+        &crate::vec3::Point3::new(0.0, 0.0, 0.0),
+        &crate::vec3::Point3::new(165.0, 165.0, 165.0),
+        Rc::new(RefCell::new(white.clone())),
+    );
+    let cuboid = RotateY::new(Rc::new(cuboid), -18.0);
+    let cuboid = Translation::new(Rc::new(cuboid), crate::vec3::Vec3::new(130.0, 0.0, 65.0));
+    world.push(Rc::new(cuboid));
 
     let bvh = BvhNode::new(&mut world, 0.0, 0.0);
 
