@@ -40,6 +40,9 @@ pub use rotate_y::RotateY;
 pub mod rotate_z;
 pub use rotate_z::RotateZ;
 
+pub mod constant_medium;
+pub use constant_medium::ConstantMedium;
+
 /// p should be a unit sphere
 fn get_sphere_uv(p: &vec3::Point3) -> (f64, f64) {
     let pi = std::f64::consts::PI;

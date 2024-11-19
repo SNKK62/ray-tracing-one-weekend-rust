@@ -14,6 +14,9 @@ pub use metal::Metal;
 pub mod diffuse_light;
 pub use diffuse_light::DiffuseLight;
 
+pub mod isotropic;
+pub use isotropic::Isotropic;
+
 pub trait Material {
     fn scatter(
         &self,

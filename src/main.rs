@@ -7,12 +7,12 @@ fn main() {
     // let width = 384;
     let width = 512;
     let height = (width as f64 / aspect_ratio) as i64;
-    let samples_per_pixel = 10;
+    let samples_per_pixel = 100;
     let max_depth = 100;
 
     print!("P3\n{} {}\n255\n", width, height);
 
-    let world = scenes::cornell_box::scene();
+    let world = scenes::cornell_smoke::scene();
 
     // NOTE: The following code is for the camera position for random scenes
     // let lookfrom = vec3::Point3::new(13.0, 2.0, 3.0);

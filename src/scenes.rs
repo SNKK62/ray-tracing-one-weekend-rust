@@ -1,4 +1,5 @@
 pub mod cornell_box;
+pub mod cornell_smoke;
 pub mod earthball;
 pub mod random;
 pub mod random_moving;
