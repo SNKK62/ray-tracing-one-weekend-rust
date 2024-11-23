@@ -4,6 +4,7 @@ use crate::ray;
 use crate::vec3;
 use std::{cell::RefCell, rc::Rc};
 
+#[derive(Clone)]
 pub struct Sphere {
     center: vec3::Point3,
     radius: f64,

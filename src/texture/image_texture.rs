@@ -34,8 +34,6 @@ impl ImageTexture {
     const BYTES_PER_PIXEL: u32 = 3;
     pub fn new(filename: &str) -> Self {
         let data = load_image(filename);
-        eprintln!("width: {:?}", data.width);
-        eprintln!("height: {:?}", data.height);
         ImageTexture {
             data: data.data,
             width: data.width,
