@@ -3,13 +3,13 @@ use crate::material::{Dielectric, Lambertian, Material, Metal};
 use crate::texture::{Checker, SolidColor};
 use crate::vec3::{Color, Point3};
 use rand::Rng;
-use std::{boxed::Box, cell::RefCell, rc::Rc};
+use std::{cell::RefCell, rc::Rc};
 
 pub fn scene() -> HittableList {
     let mut world: Vec<Rc<dyn Hittable>> = Vec::new();
     let checker = Checker::new(
-        Box::new(SolidColor::new(Color::new(0.2, 0.3, 0.1))),
-        Box::new(SolidColor::new(Color::new(0.9, 0.9, 0.9))),
+        Rc::new(SolidColor::new(Color::new(0.2, 0.3, 0.1))),
+        Rc::new(SolidColor::new(Color::new(0.9, 0.9, 0.9))),
     );
     let ground_material = Rc::new(RefCell::new(Lambertian::new(Rc::new(checker))));
     world.push(Rc::new(Sphere::new(

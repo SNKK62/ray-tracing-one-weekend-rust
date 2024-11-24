@@ -1,13 +1,13 @@
+use crate::texture::Texture;
+use std::rc::Rc;
+
 pub struct Checker {
-    odd: Box<dyn crate::texture::Texture>,
-    even: Box<dyn crate::texture::Texture>,
+    odd: Rc<dyn Texture>,
+    even: Rc<dyn Texture>,
 }
 
 impl Checker {
-    pub fn new(
-        odd: Box<dyn crate::texture::Texture>,
-        even: Box<dyn crate::texture::Texture>,
-    ) -> Self {
+    pub fn new(odd: Rc<dyn Texture>, even: Rc<dyn Texture>) -> Self {
         Self { odd, even }
     }
 }
