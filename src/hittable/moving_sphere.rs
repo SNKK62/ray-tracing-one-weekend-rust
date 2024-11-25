@@ -4,6 +4,7 @@ use crate::ray;
 use crate::vec3;
 use std::{cell::RefCell, rc::Rc};
 
+#[derive(Debug, Clone)]
 pub struct MovingSphere {
     center0: vec3::Point3,
     center1: vec3::Point3,

@@ -7,6 +7,7 @@ use rand::Rng;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+#[derive(Debug, Clone)]
 pub struct ConstantMedium {
     boundary: Rc<dyn Hittable>,
     phase_function: Rc<RefCell<dyn Material>>,

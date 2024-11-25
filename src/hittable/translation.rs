@@ -2,6 +2,7 @@ use super::{HitRecord, Hittable, AABB};
 use crate::vec3::Vec3;
 use std::rc::Rc;
 
+#[derive(Debug, Clone)]
 pub struct Translation {
     offset: Vec3,
     ptr: Rc<dyn Hittable>,

@@ -13,6 +13,8 @@ pub use noise_texture::NoiseTexture;
 pub mod image_texture;
 pub use image_texture::ImageTexture;
 
-pub trait Texture {
+use std::fmt::Debug;
+
+pub trait Texture: Debug {
     fn value(&self, u: f64, v: f64, p: &Vec3) -> Color;
 }

@@ -4,6 +4,7 @@ use crate::vec3::Point3;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+#[derive(Debug, Clone)]
 pub struct Cuboid {
     box_min: Point3,
     box_max: Point3,

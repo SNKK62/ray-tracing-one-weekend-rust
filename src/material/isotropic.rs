@@ -5,6 +5,7 @@ use crate::texture::Texture;
 use crate::vec3::{Color, Vec3};
 use std::rc::Rc;
 
+#[derive(Debug, Clone)]
 pub struct Isotropic {
     albedo: Rc<dyn Texture>,
 }

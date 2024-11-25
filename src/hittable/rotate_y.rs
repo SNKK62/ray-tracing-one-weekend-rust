@@ -4,6 +4,7 @@ use crate::ray::Ray;
 use crate::vec3::Vec3;
 use std::rc::Rc;
 
+#[derive(Debug, Clone)]
 pub struct RotateY {
     ptr: Rc<dyn Hittable>,
     sin_theta: f64,

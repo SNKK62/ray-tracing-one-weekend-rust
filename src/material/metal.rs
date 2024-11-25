@@ -1,6 +1,7 @@
 use super::{reflect, Material};
 use crate::{hittable, ray, vec3};
 
+#[derive(Debug, Clone)]
 pub struct Metal {
     albedo: vec3::Color,
     fuzz: f64,

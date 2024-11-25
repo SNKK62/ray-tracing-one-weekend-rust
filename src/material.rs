@@ -17,7 +17,9 @@ pub use diffuse_light::DiffuseLight;
 pub mod isotropic;
 pub use isotropic::Isotropic;
 
-pub trait Material {
+use std::fmt::Debug;
+
+pub trait Material: Debug {
     fn scatter(
         &self,
         r_in: &ray::Ray,

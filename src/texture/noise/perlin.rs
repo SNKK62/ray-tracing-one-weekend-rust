@@ -1,5 +1,6 @@
 use crate::vec3::{Point3, Vec3};
 
+#[derive(Debug, Clone)]
 pub struct Perlin {
     ranvec: Vec<Vec3>,
     perm_x: Vec<usize>,

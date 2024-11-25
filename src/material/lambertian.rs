@@ -3,7 +3,7 @@ use crate::texture::Texture;
 use crate::{hittable, ray, vec3};
 use std::rc::Rc;
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Lambertian {
     albedo: Rc<dyn Texture>,
 }

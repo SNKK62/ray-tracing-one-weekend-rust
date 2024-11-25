@@ -23,6 +23,7 @@ fn load_image(path: &str) -> ImageData {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct ImageTexture {
     data: Vec<u8>,
     width: u32,

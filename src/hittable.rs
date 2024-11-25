@@ -43,6 +43,8 @@ pub use rotate_z::RotateZ;
 pub mod constant_medium;
 pub use constant_medium::ConstantMedium;
 
+use std::fmt::Debug;
+
 /// p should be a unit sphere
 fn get_sphere_uv(p: &vec3::Point3) -> (f64, f64) {
     let pi = std::f64::consts::PI;
@@ -84,7 +86,7 @@ impl HitRecord {
     }
 }
 
-pub trait Hittable {
+pub trait Hittable: Debug {
     fn hit(&self, r: &ray::Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
     fn bounding_box(&self, time0: f64, time1: f64, output_box: &mut AABB) -> bool;
     fn set_front_face(&self, r: &ray::Ray, outward_normal: &vec3::Vec3, record: &mut HitRecord) {

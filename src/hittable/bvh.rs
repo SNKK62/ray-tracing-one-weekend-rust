@@ -2,6 +2,7 @@ use super::{surrounding_box, HitRecord, Hittable, AABB};
 use crate::{ray, vec3};
 use std::rc::Rc;
 
+#[derive(Debug, Clone)]
 pub struct BvhNode {
     left: Rc<dyn Hittable>,
     right: Rc<dyn Hittable>,

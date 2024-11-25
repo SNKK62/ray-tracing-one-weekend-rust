@@ -2,7 +2,7 @@ pub use super::Material;
 pub use crate::texture::Texture;
 pub use std::rc::Rc;
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct DiffuseLight {
     pub emit: Rc<dyn Texture>,
 }

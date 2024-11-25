@@ -1,5 +1,6 @@
 use crate::vec3::Color;
 
+#[derive(Debug, Clone)]
 pub struct SolidColor {
     color_value: Color,
 }

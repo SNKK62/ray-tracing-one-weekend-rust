@@ -4,6 +4,7 @@ use crate::vec3::Vec3;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+#[derive(Debug, Clone)]
 pub struct XZRect {
     mp: Rc<RefCell<dyn Material>>,
     x0: f64,

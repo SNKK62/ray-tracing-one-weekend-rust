@@ -1,6 +1,7 @@
 use crate::texture::Texture;
 use std::rc::Rc;
 
+#[derive(Debug, Clone)]
 pub struct Checker {
     odd: Rc<dyn Texture>,
     even: Rc<dyn Texture>,

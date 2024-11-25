@@ -8,6 +8,7 @@ fn schlick(cosine: f64, ref_idx: f64) -> f64 {
     r0 + (1.0 - r0) * (1.0 - cosine).powi(5)
 }
 
+#[derive(Debug, Clone)]
 pub struct Dielectric {
     ref_idx: f64,
 }
