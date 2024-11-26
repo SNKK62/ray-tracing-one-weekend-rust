@@ -14,6 +14,6 @@ The output of the first week project is
 
 The outputs of the second week project are
 
-![output](./images/cornell_box_translation_rotation.png)
+![output](./images/cornel_box_pertty.png)
 
 ![output](./images/final2nd.png)
