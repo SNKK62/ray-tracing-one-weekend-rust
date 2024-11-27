@@ -1,7 +1,7 @@
 use image::RgbImage;
 use rand::Rng;
 use ray_tracer_rs::{camera, hittable::Hittable, progress, scenes, vec3};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 use std::thread;
 use std::time::Instant;
 
@@ -56,7 +56,7 @@ fn main() {
     // }
     //
     // eprintln!("\n\nDone.\n"); // indicate completion
-    let pb = Arc::new(Mutex::new(progress::ProgressBar::new(width * height)));
+    let pb = Arc::new(RwLock::new(progress::ProgressBar::new(width * height)));
     let world: Arc<dyn Hittable> = Arc::new(scenes::cornell_box::scene());
     let cam = Arc::new(camera::Camera::new(
         lookfrom,
@@ -69,7 +69,7 @@ fn main() {
         0.0,
         1.0,
     ));
-    let buffer = Arc::new(Mutex::new(vec![0; width * height * 3]));
+    let buffer = Arc::new(RwLock::new(vec![0; width * height * 3]));
     let handles: Vec<_> = (0..height)
         .rev()
         .map(|j| {
@@ -90,12 +90,12 @@ fn main() {
                         let r = cam.get_ray(u, v);
                         pixel_color += r.color(&background, &*world, max_depth);
                     }
-                    let mut buf = buffer.lock().unwrap();
+                    let mut buf = buffer.write().unwrap();
                     let (r, g, b) = pixel_color.get_color(samples_per_pixel);
                     buf[j * width * 3 + i * 3] = r;
                     buf[j * width * 3 + i * 3 + 1] = g;
                     buf[j * width * 3 + i * 3 + 2] = b;
-                    let mut pb = pb.lock().unwrap();
+                    let mut pb = pb.write().unwrap();
                     pb.update();
                 }
             })

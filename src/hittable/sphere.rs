@@ -2,20 +2,20 @@ use crate::hittable::{HitRecord, Hittable, AABB};
 use crate::material;
 use crate::ray;
 use crate::vec3;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct Sphere {
     center: vec3::Point3,
     radius: f64,
-    material: Arc<Mutex<dyn material::Material>>,
+    material: Arc<RwLock<dyn material::Material>>,
 }
 
 impl Sphere {
     pub fn new(
         center: &vec3::Point3,
         radius: f64,
-        material: Arc<Mutex<dyn material::Material>>,
+        material: Arc<RwLock<dyn material::Material>>,
     ) -> Self {
         Self {
             center: *center,

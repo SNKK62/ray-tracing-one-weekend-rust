@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 use crate::material;
 use crate::ray;
@@ -58,7 +58,7 @@ fn get_sphere_uv(p: &vec3::Point3) -> (f64, f64) {
 pub struct HitRecord {
     pub p: vec3::Point3,
     pub normal: vec3::Vec3,
-    pub material: Option<Arc<Mutex<dyn material::Material>>>,
+    pub material: Option<Arc<RwLock<dyn material::Material>>>,
     pub t: f64,
     pub u: f64,
     pub v: f64,

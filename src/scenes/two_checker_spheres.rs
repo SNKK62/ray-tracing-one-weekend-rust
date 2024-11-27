@@ -2,7 +2,7 @@ use crate::hittable::{BvhNode, Hittable, HittableList, Sphere};
 use crate::material::Lambertian;
 use crate::texture::{Checker, SolidColor};
 use crate::vec3::{Color, Point3};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 pub fn scene() -> HittableList {
     let mut world: Vec<Arc<dyn Hittable>> = Vec::new();
@@ -11,7 +11,7 @@ pub fn scene() -> HittableList {
         Arc::new(SolidColor::new(Color::new(0.9, 0.9, 0.9))),
     );
 
-    let sphere_material = Arc::new(Mutex::new(Lambertian::new(Arc::new(checker))));
+    let sphere_material = Arc::new(RwLock::new(Lambertian::new(Arc::new(checker))));
     world.push(Arc::new(Sphere::new(
         &Point3::new(0.0, -10.0, 0.0),
         10.0,

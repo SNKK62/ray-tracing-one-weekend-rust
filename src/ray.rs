@@ -41,12 +41,12 @@ impl Ray {
         }
         let mat = mat.unwrap();
 
-        let emitted = mat.lock().unwrap().emitted(rec.u, rec.v, &rec.p);
+        let emitted = mat.read().unwrap().emitted(rec.u, rec.v, &rec.p);
         let mut scattered = Self::new(&rec.p, &rec.normal, 0.0); // Temporary Ray
         let mut attenuation = vec3::Color::zero();
 
         if !mat
-            .lock()
+            .read()
             .unwrap()
             .scatter(self, &rec, &mut attenuation, &mut scattered)
         {

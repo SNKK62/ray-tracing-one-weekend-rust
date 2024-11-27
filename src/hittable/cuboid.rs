@@ -1,7 +1,7 @@
 use super::{HitRecord, Hittable, HittableList, XYRect, XZRect, YZRect, AABB};
 use crate::material::Material;
 use crate::vec3::Point3;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct Cuboid {
@@ -11,7 +11,7 @@ pub struct Cuboid {
 }
 
 impl Cuboid {
-    pub fn new(p0: &Point3, p1: &Point3, mat: Arc<Mutex<dyn Material>>) -> Self {
+    pub fn new(p0: &Point3, p1: &Point3, mat: Arc<RwLock<dyn Material>>) -> Self {
         let mut sides = HittableList::new();
         sides.add(Arc::new(XYRect::new(
             p0.x(),

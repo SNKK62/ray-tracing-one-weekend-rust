@@ -1,11 +1,11 @@
 use super::{HitRecord, Hittable, AABB};
 use crate::material::Material;
 use crate::vec3::Vec3;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct XYRect {
-    mp: Arc<Mutex<dyn Material>>,
+    mp: Arc<RwLock<dyn Material>>,
     x0: f64,
     x1: f64,
     y0: f64,
@@ -20,7 +20,7 @@ impl XYRect {
         y0: f64,
         y1: f64,
         k: f64,
-        material: Arc<Mutex<dyn Material>>,
+        material: Arc<RwLock<dyn Material>>,
     ) -> Self {
         XYRect {
             mp: material,

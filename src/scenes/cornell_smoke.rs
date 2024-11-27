@@ -5,7 +5,7 @@ use crate::hittable::{
 use crate::material::{DiffuseLight, Lambertian};
 use crate::texture::SolidColor;
 use crate::vec3::Color;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 pub fn scene() -> HittableList {
     let mut world: Vec<Arc<dyn Hittable>> = Vec::new();
@@ -21,7 +21,7 @@ pub fn scene() -> HittableList {
         0.0,
         555.0,
         555.0,
-        Arc::new(Mutex::new(green)),
+        Arc::new(RwLock::new(green)),
     )));
     world.push(Arc::new(YZRect::new(
         0.0,
@@ -29,7 +29,7 @@ pub fn scene() -> HittableList {
         0.0,
         555.0,
         0.0,
-        Arc::new(Mutex::new(red)),
+        Arc::new(RwLock::new(red)),
     )));
     world.push(Arc::new(XZRect::new(
         113.0,
@@ -37,7 +37,7 @@ pub fn scene() -> HittableList {
         127.0,
         432.0,
         554.0,
-        Arc::new(Mutex::new(light.clone())),
+        Arc::new(RwLock::new(light.clone())),
     )));
     world.push(Arc::new(XZRect::new(
         0.0,
@@ -45,7 +45,7 @@ pub fn scene() -> HittableList {
         0.0,
         555.0,
         0.0,
-        Arc::new(Mutex::new(white.clone())),
+        Arc::new(RwLock::new(white.clone())),
     )));
     world.push(Arc::new(XZRect::new(
         0.0,
@@ -53,7 +53,7 @@ pub fn scene() -> HittableList {
         0.0,
         555.0,
         555.0,
-        Arc::new(Mutex::new(white.clone())),
+        Arc::new(RwLock::new(white.clone())),
     )));
     world.push(Arc::new(XYRect::new(
         0.0,
@@ -61,13 +61,13 @@ pub fn scene() -> HittableList {
         0.0,
         555.0,
         555.0,
-        Arc::new(Mutex::new(white.clone())),
+        Arc::new(RwLock::new(white.clone())),
     )));
     // Box
     let cuboid = Cuboid::new(
         &crate::vec3::Point3::new(0.0, 0.0, 0.0),
         &crate::vec3::Point3::new(165.0, 330.0, 165.0),
-        Arc::new(Mutex::new(white.clone())),
+        Arc::new(RwLock::new(white.clone())),
     );
     let cuboid = RotateY::new(Arc::new(cuboid), 15.0);
     let cuboid = Translation::new(Arc::new(cuboid), crate::vec3::Vec3::new(265.0, 0.0, 295.0));
@@ -80,7 +80,7 @@ pub fn scene() -> HittableList {
     let cuboid = Cuboid::new(
         &crate::vec3::Point3::new(0.0, 0.0, 0.0),
         &crate::vec3::Point3::new(165.0, 165.0, 165.0),
-        Arc::new(Mutex::new(white.clone())),
+        Arc::new(RwLock::new(white.clone())),
     );
     let cuboid = RotateY::new(Arc::new(cuboid), -18.0);
     let cuboid = Translation::new(Arc::new(cuboid), crate::vec3::Vec3::new(130.0, 0.0, 65.0));

@@ -6,7 +6,7 @@ use crate::material::{Dielectric, DiffuseLight, Lambertian, Metal};
 use crate::texture::{ImageTexture, NoiseTexture, SolidColor};
 use crate::vec3::{Color, Point3, Vec3};
 use rand::Rng;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 pub fn scene() -> HittableList {
     let mut box_world: Vec<Arc<dyn Hittable>> = Vec::new();
@@ -26,7 +26,7 @@ pub fn scene() -> HittableList {
             let box_obj = Cuboid::new(
                 &Point3::new(x0, y0, z0),
                 &Point3::new(x1, y1, z1),
-                Arc::new(Mutex::new(ground.clone())),
+                Arc::new(RwLock::new(ground.clone())),
             );
             box_world.push(Arc::new(box_obj));
         }
@@ -46,7 +46,7 @@ pub fn scene() -> HittableList {
         147.0,
         412.0,
         554.0,
-        Arc::new(Mutex::new(light)),
+        Arc::new(RwLock::new(light)),
     )));
 
     let center1 = Point3::new(400.0, 400.0, 200.0);
@@ -58,7 +58,7 @@ pub fn scene() -> HittableList {
         &center1,
         &center2,
         50.0,
-        Arc::new(Mutex::new(moving_sphere_material)),
+        Arc::new(RwLock::new(moving_sphere_material)),
         0.0,
         1.0,
     )));
@@ -66,19 +66,19 @@ pub fn scene() -> HittableList {
     hlist.add(Arc::new(Sphere::new(
         &Point3::new(260.0, 150.0, 45.0),
         50.0,
-        Arc::new(Mutex::new(Dielectric::new(1.5))),
+        Arc::new(RwLock::new(Dielectric::new(1.5))),
     )));
     // metal sphere
     hlist.add(Arc::new(Sphere::new(
         &Point3::new(0.0, 150.0, 145.0),
         50.0,
-        Arc::new(Mutex::new(Metal::new(&Color::new(0.8, 0.8, 0.9), 10.0))),
+        Arc::new(RwLock::new(Metal::new(&Color::new(0.8, 0.8, 0.9), 10.0))),
     )));
 
     let boundary = Sphere::new(
         &Point3::new(360.0, 150.0, 145.0),
         70.0,
-        Arc::new(Mutex::new(Dielectric::new(1.5))),
+        Arc::new(RwLock::new(Dielectric::new(1.5))),
     );
     hlist.add(Arc::new(boundary.clone()));
     hlist.add(Arc::new(ConstantMedium::new(
@@ -90,7 +90,7 @@ pub fn scene() -> HittableList {
     let boundary = Sphere::new(
         &Point3::new(0.0, 0.0, 0.0),
         5000.0,
-        Arc::new(Mutex::new(Dielectric::new(1.5))),
+        Arc::new(RwLock::new(Dielectric::new(1.5))),
     );
     hlist.add(Arc::new(ConstantMedium::new(
         Arc::new(boundary),
@@ -103,7 +103,7 @@ pub fn scene() -> HittableList {
     hlist.add(Arc::new(Sphere::new(
         &Point3::new(400.0, 200.0, 400.0),
         100.0,
-        Arc::new(Mutex::new(emat)),
+        Arc::new(RwLock::new(emat)),
     )));
 
     // perlin sphere
@@ -111,7 +111,7 @@ pub fn scene() -> HittableList {
     hlist.add(Arc::new(Sphere::new(
         &Point3::new(220.0, 280.0, 300.0),
         80.0,
-        Arc::new(Mutex::new(Lambertian::new(Arc::new(pertext)))),
+        Arc::new(RwLock::new(Lambertian::new(Arc::new(pertext)))),
     )));
 
     // random spheres as box
@@ -122,7 +122,7 @@ pub fn scene() -> HittableList {
         box_world.push(Arc::new(Sphere::new(
             &Point3::rand_range(0.0, 165.0),
             10.0,
-            Arc::new(Mutex::new(white.clone())),
+            Arc::new(RwLock::new(white.clone())),
         )));
     }
     hlist.add(Arc::new(Translation::new(

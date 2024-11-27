@@ -3,7 +3,7 @@ use crate::material::{Dielectric, Lambertian, Material, Metal};
 use crate::texture::{Checker, SolidColor};
 use crate::vec3::{Color, Point3};
 use rand::Rng;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 pub fn scene() -> HittableList {
     let mut world: Vec<Arc<dyn Hittable>> = Vec::new();
@@ -11,7 +11,7 @@ pub fn scene() -> HittableList {
         Arc::new(SolidColor::new(Color::new(0.2, 0.3, 0.1))),
         Arc::new(SolidColor::new(Color::new(0.9, 0.9, 0.9))),
     );
-    let ground_material = Arc::new(Mutex::new(Lambertian::new(Arc::new(checker))));
+    let ground_material = Arc::new(RwLock::new(Lambertian::new(Arc::new(checker))));
     world.push(Arc::new(Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
         1000.0,
@@ -29,11 +29,11 @@ pub fn scene() -> HittableList {
 
             let radius = 0.2;
             if (center - Point3::new(4.0, radius, 0.0)).len() > 0.9 {
-                let sphere_material: Arc<Mutex<dyn Material>>;
+                let sphere_material: Arc<RwLock<dyn Material>>;
                 if choose_mat < 0.7 {
                     // diffuse
                     let albedo = Color::rand() * Color::rand();
-                    sphere_material = Arc::new(Mutex::new(Lambertian::new(Arc::new(
+                    sphere_material = Arc::new(RwLock::new(Lambertian::new(Arc::new(
                         SolidColor::new(albedo),
                     ))));
                     world.push(Arc::new(Sphere::new(&center, radius, sphere_material)));
@@ -41,24 +41,24 @@ pub fn scene() -> HittableList {
                     // metal
                     let albedo = Color::rand_range(0.5, 1.0);
                     let fuzz = rand::thread_rng().gen_range(0.0..0.5);
-                    sphere_material = Arc::new(Mutex::new(Metal::new(&albedo, fuzz)));
+                    sphere_material = Arc::new(RwLock::new(Metal::new(&albedo, fuzz)));
                     world.push(Arc::new(Sphere::new(&center, radius, sphere_material)));
                 } else {
                     // glass
-                    sphere_material = Arc::new(Mutex::new(Dielectric::new(1.5)));
+                    sphere_material = Arc::new(RwLock::new(Dielectric::new(1.5)));
                     world.push(Arc::new(Sphere::new(&center, radius, sphere_material)));
                 }
             }
         }
     }
 
-    let material1 = Arc::new(Mutex::new(Dielectric::new(1.5)));
+    let material1 = Arc::new(RwLock::new(Dielectric::new(1.5)));
     world.push(Arc::new(Sphere::new(
         &Point3::new(0.0, 1.0, 0.0),
         1.0,
         material1,
     )));
-    let material2 = Arc::new(Mutex::new(Lambertian::new(Arc::new(SolidColor::new(
+    let material2 = Arc::new(RwLock::new(Lambertian::new(Arc::new(SolidColor::new(
         Color::new(0.4, 0.2, 0.1),
     )))));
     world.push(Arc::new(Sphere::new(
@@ -66,7 +66,7 @@ pub fn scene() -> HittableList {
         1.0,
         material2,
     )));
-    let material3 = Arc::new(Mutex::new(Metal::new(&Color::new(0.7, 0.6, 0.5), 0.0)));
+    let material3 = Arc::new(RwLock::new(Metal::new(&Color::new(0.7, 0.6, 0.5), 0.0)));
     world.push(Arc::new(Sphere::new(
         &Point3::new(4.0, 1.0, 0.0),
         1.0,

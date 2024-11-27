@@ -4,12 +4,12 @@ use crate::ray::Ray;
 use crate::texture::Texture;
 use crate::vec3::Vec3;
 use rand::Rng;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct ConstantMedium {
     boundary: Arc<dyn Hittable>,
-    phase_function: Arc<Mutex<dyn Material>>,
+    phase_function: Arc<RwLock<dyn Material>>,
     neg_inv_density: f64,
 }
 
@@ -17,7 +17,7 @@ impl ConstantMedium {
     pub fn new(boundary: Arc<dyn Hittable>, density: f64, tex: Arc<dyn Texture>) -> Self {
         Self {
             boundary,
-            phase_function: Arc::new(Mutex::new(Isotropic::new(tex))),
+            phase_function: Arc::new(RwLock::new(Isotropic::new(tex))),
             neg_inv_density: -1.0 / density,
         }
     }
