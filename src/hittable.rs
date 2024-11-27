@@ -1,5 +1,4 @@
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::sync::{Arc, Mutex};
 
 use crate::material;
 use crate::ray;
@@ -59,7 +58,7 @@ fn get_sphere_uv(p: &vec3::Point3) -> (f64, f64) {
 pub struct HitRecord {
     pub p: vec3::Point3,
     pub normal: vec3::Vec3,
-    pub material: Option<Rc<RefCell<dyn material::Material>>>,
+    pub material: Option<Arc<Mutex<dyn material::Material>>>,
     pub t: f64,
     pub u: f64,
     pub v: f64,
@@ -86,7 +85,7 @@ impl HitRecord {
     }
 }
 
-pub trait Hittable: Debug {
+pub trait Hittable: Debug + Send + Sync {
     fn hit(&self, r: &ray::Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
     fn bounding_box(&self, time0: f64, time1: f64, output_box: &mut AABB) -> bool;
     fn set_front_face(&self, r: &ray::Ray, outward_normal: &vec3::Vec3, record: &mut HitRecord) {

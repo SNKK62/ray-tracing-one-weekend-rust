@@ -26,6 +26,23 @@ impl Color {
         (255.999 * self.z()) as u8
     }
 
+    pub fn get_color(&self, samples_per_pixel: i64) -> (u8, u8, u8) {
+        let scale = 1.0 / samples_per_pixel as f64;
+        // Divide the color by the number of samples and gamma-correct for gamma=2.0
+        let r = (self.x() * scale).sqrt();
+        let g = (self.y() * scale).sqrt();
+        let b = (self.z() * scale).sqrt();
+
+        let min = 0.0;
+        let max = 0.999;
+
+        (
+            (255.999 * clamp(r, min, max)).round() as u8,
+            (255.999 * clamp(g, min, max)).round() as u8,
+            (255.999 * clamp(b, min, max)).round() as u8,
+        )
+    }
+
     pub fn write(&self, samples_per_pixel: i64) {
         let scale = 1.0 / samples_per_pixel as f64;
         // Divide the color by the number of samples and gamma-correct for gamma=2.0

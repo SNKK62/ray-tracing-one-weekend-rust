@@ -1,15 +1,15 @@
 use super::{HitRecord, Hittable, AABB};
 use crate::vec3::Vec3;
-use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct Translation {
     offset: Vec3,
-    ptr: Rc<dyn Hittable>,
+    ptr: Arc<dyn Hittable>,
 }
 
 impl Translation {
-    pub fn new(ptr: Rc<dyn Hittable>, offset: Vec3) -> Self {
+    pub fn new(ptr: Arc<dyn Hittable>, offset: Vec3) -> Self {
         Translation { ptr, offset }
     }
 }

@@ -1,15 +1,15 @@
 use super::{surrounding_box, HitRecord, Hittable, AABB};
 use crate::{ray, vec3};
-use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct BvhNode {
-    left: Rc<dyn Hittable>,
-    right: Rc<dyn Hittable>,
+    left: Arc<dyn Hittable>,
+    right: Arc<dyn Hittable>,
     bbox: AABB,
 }
 
-fn box_compare(a: &Rc<dyn Hittable>, b: &Rc<dyn Hittable>, axis: usize) -> std::cmp::Ordering {
+fn box_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>, axis: usize) -> std::cmp::Ordering {
     let mut box_a = AABB::new(&vec3::Point3::zero(), &vec3::Point3::zero());
     let mut box_b = AABB::new(&vec3::Point3::zero(), &vec3::Point3::zero());
     if !a.bounding_box(0.0, 0.0, &mut box_a) || !b.bounding_box(0.0, 0.0, &mut box_b) {
@@ -18,24 +18,24 @@ fn box_compare(a: &Rc<dyn Hittable>, b: &Rc<dyn Hittable>, axis: usize) -> std::
     box_a.min[axis].partial_cmp(&box_b.min[axis]).unwrap()
 }
 
-fn box_x_compare(a: &Rc<dyn Hittable>, b: &Rc<dyn Hittable>) -> std::cmp::Ordering {
+fn box_x_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>) -> std::cmp::Ordering {
     box_compare(a, b, 0)
 }
 
-fn box_y_compare(a: &Rc<dyn Hittable>, b: &Rc<dyn Hittable>) -> std::cmp::Ordering {
+fn box_y_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>) -> std::cmp::Ordering {
     box_compare(a, b, 1)
 }
 
-fn box_z_compare(a: &Rc<dyn Hittable>, b: &Rc<dyn Hittable>) -> std::cmp::Ordering {
+fn box_z_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>) -> std::cmp::Ordering {
     box_compare(a, b, 2)
 }
 
 impl BvhNode {
-    pub fn new(objects: &mut Vec<Rc<dyn Hittable>>, time0: f64, time1: f64) -> Self {
+    pub fn new(objects: &mut Vec<Arc<dyn Hittable>>, time0: f64, time1: f64) -> Self {
         Self::create(objects, 0, objects.len(), time0, time1)
     }
     pub fn create(
-        objects: &mut Vec<Rc<dyn Hittable>>,
+        objects: &mut Vec<Arc<dyn Hittable>>,
         start: usize,
         end: usize,
         time0: f64,
@@ -51,8 +51,8 @@ impl BvhNode {
         };
 
         let object_span = end - start;
-        let left: Rc<dyn Hittable>;
-        let right: Rc<dyn Hittable>;
+        let left: Arc<dyn Hittable>;
+        let right: Arc<dyn Hittable>;
 
         if object_span == 1 {
             // assign the same object to both left and right
@@ -72,8 +72,8 @@ impl BvhNode {
         } else {
             objects[start..end].sort_by(comparator);
             let mid = start + object_span / 2;
-            left = Rc::new(BvhNode::create(objects, start, mid, time0, time1));
-            right = Rc::new(BvhNode::create(objects, mid, end, time0, time1));
+            left = Arc::new(BvhNode::create(objects, start, mid, time0, time1));
+            right = Arc::new(BvhNode::create(objects, mid, end, time0, time1));
         }
 
         let mut box_left = AABB::new(&vec3::Point3::zero(), &vec3::Point3::zero());

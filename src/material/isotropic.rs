@@ -3,15 +3,15 @@ use crate::hittable::HitRecord;
 use crate::ray::Ray;
 use crate::texture::Texture;
 use crate::vec3::{Color, Vec3};
-use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct Isotropic {
-    albedo: Rc<dyn Texture>,
+    albedo: Arc<dyn Texture>,
 }
 
 impl Isotropic {
-    pub fn new(albedo: Rc<dyn Texture>) -> Self {
+    pub fn new(albedo: Arc<dyn Texture>) -> Self {
         Self { albedo }
     }
 }

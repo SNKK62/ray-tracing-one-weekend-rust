@@ -3,14 +3,14 @@ use crate::material;
 use crate::texture::SolidColor;
 use crate::vec3::{Color, Point3};
 use rand::Rng;
-use std::{cell::RefCell, rc::Rc};
+use std::sync::{Arc, Mutex};
 
 pub fn scene() -> HittableList {
     let mut world = HittableList::new();
-    let ground_material = Rc::new(RefCell::new(material::Lambertian::new(Rc::new(
+    let ground_material = Arc::new(Mutex::new(material::Lambertian::new(Arc::new(
         SolidColor::new(Color::new(0.5, 0.5, 0.5)),
     ))));
-    world.add(Rc::new(Sphere::new(
+    world.add(Arc::new(Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
         1000.0,
         ground_material.clone(),
@@ -27,16 +27,16 @@ pub fn scene() -> HittableList {
 
             let radius = 0.2;
             if (center - Point3::new(4.0, radius, 0.0)).len() > 0.9 {
-                let sphere_material: Rc<RefCell<dyn material::Material>>;
+                let sphere_material: Arc<Mutex<dyn material::Material>>;
                 if choose_mat < 0.7 {
                     // diffuse
                     let albedo = Color::rand() * Color::rand();
-                    sphere_material = Rc::new(RefCell::new(material::Lambertian::new(Rc::new(
+                    sphere_material = Arc::new(Mutex::new(material::Lambertian::new(Arc::new(
                         SolidColor::new(albedo),
                     ))));
                     let center2 =
                         center + Point3::new(0.0, rand::thread_rng().gen_range(0.0..0.5), 0.0);
-                    world.add(Rc::new(MovingSphere::new(
+                    world.add(Arc::new(MovingSphere::new(
                         &center,
                         &center2,
                         radius,
@@ -48,36 +48,36 @@ pub fn scene() -> HittableList {
                     // metal
                     let albedo = Color::rand_range(0.5, 1.0);
                     let fuzz = rand::thread_rng().gen_range(0.0..0.5);
-                    sphere_material = Rc::new(RefCell::new(material::Metal::new(&albedo, fuzz)));
-                    world.add(Rc::new(Sphere::new(&center, radius, sphere_material)));
+                    sphere_material = Arc::new(Mutex::new(material::Metal::new(&albedo, fuzz)));
+                    world.add(Arc::new(Sphere::new(&center, radius, sphere_material)));
                 } else {
                     // glass
-                    sphere_material = Rc::new(RefCell::new(material::Dielectric::new(1.5)));
-                    world.add(Rc::new(Sphere::new(&center, radius, sphere_material)));
+                    sphere_material = Arc::new(Mutex::new(material::Dielectric::new(1.5)));
+                    world.add(Arc::new(Sphere::new(&center, radius, sphere_material)));
                 }
             }
         }
     }
 
-    let material1 = Rc::new(RefCell::new(material::Dielectric::new(1.5)));
-    world.add(Rc::new(Sphere::new(
+    let material1 = Arc::new(Mutex::new(material::Dielectric::new(1.5)));
+    world.add(Arc::new(Sphere::new(
         &Point3::new(0.0, 1.0, 0.0),
         1.0,
         material1,
     )));
-    let material2 = Rc::new(RefCell::new(material::Lambertian::new(Rc::new(
+    let material2 = Arc::new(Mutex::new(material::Lambertian::new(Arc::new(
         SolidColor::new(Color::new(0.4, 0.2, 0.1)),
     ))));
-    world.add(Rc::new(Sphere::new(
+    world.add(Arc::new(Sphere::new(
         &Point3::new(-4.0, 1.0, 0.0),
         1.0,
         material2,
     )));
-    let material3 = Rc::new(RefCell::new(material::Metal::new(
+    let material3 = Arc::new(Mutex::new(material::Metal::new(
         &Color::new(0.7, 0.6, 0.5),
         0.0,
     )));
-    world.add(Rc::new(Sphere::new(
+    world.add(Arc::new(Sphere::new(
         &Point3::new(4.0, 1.0, 0.0),
         1.0,
         material3,

@@ -1,14 +1,14 @@
 use crate::texture::Texture;
-use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct Checker {
-    odd: Rc<dyn Texture>,
-    even: Rc<dyn Texture>,
+    odd: Arc<dyn Texture>,
+    even: Arc<dyn Texture>,
 }
 
 impl Checker {
-    pub fn new(odd: Rc<dyn Texture>, even: Rc<dyn Texture>) -> Self {
+    pub fn new(odd: Arc<dyn Texture>, even: Arc<dyn Texture>) -> Self {
         Self { odd, even }
     }
 }

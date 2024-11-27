@@ -2,14 +2,14 @@ use crate::hittable::{BvhNode, Hittable, HittableList, Sphere};
 use crate::material::Lambertian;
 use crate::texture::ImageTexture;
 use crate::vec3::Point3;
-use std::{cell::RefCell, rc::Rc};
+use std::sync::{Arc, Mutex};
 
 pub fn scene() -> HittableList {
-    let mut world: Vec<Rc<dyn Hittable>> = Vec::new();
+    let mut world: Vec<Arc<dyn Hittable>> = Vec::new();
     let texture = ImageTexture::new("images/earth.png");
 
-    let sphere_material = Rc::new(RefCell::new(Lambertian::new(Rc::new(texture))));
-    world.push(Rc::new(Sphere::new(
+    let sphere_material = Arc::new(Mutex::new(Lambertian::new(Arc::new(texture))));
+    world.push(Arc::new(Sphere::new(
         &Point3::new(0.0, 0.0, 0.0),
         2.0,
         sphere_material.clone(),
@@ -18,6 +18,6 @@ pub fn scene() -> HittableList {
     let bvh = BvhNode::new(&mut world, 0.0, 0.0);
 
     let mut world = HittableList::new();
-    world.add(Rc::new(bvh));
+    world.add(Arc::new(bvh));
     world
 }

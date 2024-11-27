@@ -2,33 +2,33 @@ use crate::hittable::{BvhNode, Hittable, HittableList, Sphere, XYRect};
 use crate::material::{DiffuseLight, Lambertian};
 use crate::texture::{NoiseTexture, SolidColor};
 use crate::vec3::{Color, Point3};
-use std::{cell::RefCell, rc::Rc};
+use std::sync::{Arc, Mutex};
 
 pub fn scene() -> HittableList {
-    let mut world: Vec<Rc<dyn Hittable>> = Vec::new();
+    let mut world: Vec<Arc<dyn Hittable>> = Vec::new();
     let pertext = NoiseTexture::new(4.0);
 
-    let sphere_material = Rc::new(RefCell::new(Lambertian::new(Rc::new(pertext))));
-    world.push(Rc::new(Sphere::new(
+    let sphere_material = Arc::new(Mutex::new(Lambertian::new(Arc::new(pertext))));
+    world.push(Arc::new(Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
         1000.0,
         sphere_material.clone(),
     )));
-    world.push(Rc::new(Sphere::new(
+    world.push(Arc::new(Sphere::new(
         &Point3::new(0.0, 2.0, 0.0),
         2.0,
         sphere_material.clone(),
     )));
 
-    let difflight = Rc::new(RefCell::new(DiffuseLight::new(Rc::new(SolidColor::new(
+    let difflight = Arc::new(Mutex::new(DiffuseLight::new(Arc::new(SolidColor::new(
         Color::new(4.0, 4.0, 4.0),
     )))));
-    world.push(Rc::new(Sphere::new(
+    world.push(Arc::new(Sphere::new(
         &Point3::new(0.0, 7.0, 0.0),
         2.0,
         difflight.clone(),
     )));
-    world.push(Rc::new(XYRect::new(
+    world.push(Arc::new(XYRect::new(
         3.0,
         5.0,
         1.0,
@@ -40,6 +40,6 @@ pub fn scene() -> HittableList {
     let bvh = BvhNode::new(&mut world, 0.0, 0.0);
 
     let mut world = HittableList::new();
-    world.add(Rc::new(bvh));
+    world.add(Arc::new(bvh));
     world
 }
