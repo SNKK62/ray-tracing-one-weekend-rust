@@ -3,6 +3,7 @@ use rand::Rng;
 use ray_tracer_rs::{camera, hittable::Hittable, progress, scenes, vec3};
 use std::sync::{Arc, Mutex};
 use std::thread;
+use std::time::Instant;
 
 fn main() {
     // let aspect_ratio = 16.0 / 9.0;
@@ -10,7 +11,7 @@ fn main() {
     // let width = 384;
     let width = 512;
     let height = (width as f64 / aspect_ratio) as usize;
-    let samples_per_pixel = 5000;
+    let samples_per_pixel = 100;
     let max_depth = 100;
 
     print!("P3\n{} {}\n255\n", width, height);
@@ -101,9 +102,12 @@ fn main() {
         })
         .collect();
 
+    let start = Instant::now();
     for handle in handles {
         handle.join().unwrap();
     }
+    let duration = start.elapsed();
+    println!("Time elapsed in expensive_function() is: {:?}", duration);
     let image_buffer = Arc::try_unwrap(buffer).unwrap().into_inner().unwrap();
     let img = RgbImage::from_raw(width as u32, height as u32, image_buffer)
         .expect("incorrect image buffer size");
