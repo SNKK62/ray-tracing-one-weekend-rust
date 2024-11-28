@@ -11,12 +11,8 @@ fn main() {
     // let width = 384;
     let width = 512;
     let height = (width as f64 / aspect_ratio) as usize;
-    let samples_per_pixel = 100;
+    let samples_per_pixel = 5000;
     let max_depth = 100;
-
-    print!("P3\n{} {}\n255\n", width, height);
-
-    // let world = scenes::cornell_box::scene();
 
     // NOTE: The following code is for the camera position for random scenes
     // let lookfrom = vec3::Point3::new(13.0, 2.0, 3.0);
@@ -27,37 +23,10 @@ fn main() {
     let vup = vec3::Vec3::new(0.0, 1.0, 0.0);
     let dist_to_focus = 10.0;
     let aperture = 0.0;
-    // let cam = camera::Camera::new(
-    //     lookfrom,
-    //     lookat,
-    //     vup,
-    //     40.0,
-    //     aspect_ratio,
-    //     aperture,
-    //     dist_to_focus,
-    //     0.0,
-    //     1.0,
-    // );
     let background = vec3::Color::zero();
 
-    // let mut pb = progress::ProgressBar::new((width * height) as usize);
-    // for j in (0..height).rev() {
-    //     for i in 0..width {
-    //         let mut pixel_color = vec3::Color::zero();
-    //         for _ in 0..samples_per_pixel {
-    //             let u = (i as f64 + rand::thread_rng().gen_range(0.0..1.0)) / (width - 1) as f64;
-    //             let v = (j as f64 + rand::thread_rng().gen_range(0.0..1.0)) / (height - 1) as f64;
-    //             let r = cam.get_ray(u, v);
-    //             pixel_color += r.color(&background, &world, max_depth);
-    //         }
-    //         pb.update();
-    //         pixel_color.write(samples_per_pixel);
-    //     }
-    // }
-    //
-    // eprintln!("\n\nDone.\n"); // indicate completion
     let pb = Arc::new(RwLock::new(progress::ProgressBar::new(width * height)));
-    let world: Arc<dyn Hittable> = Arc::new(scenes::cornell_box::scene());
+    let world: Arc<dyn Hittable> = Arc::new(scenes::final_scene::scene());
     let cam = Arc::new(camera::Camera::new(
         lookfrom,
         lookat,
@@ -75,7 +44,7 @@ fn main() {
         .map(|j| {
             let buffer = Arc::clone(&buffer);
             let world = Arc::clone(&world);
-            let cam = Arc::clone(&cam); // 各スレッドに`cam`の参照を渡す
+            let cam = Arc::clone(&cam);
             let pb = Arc::clone(&pb);
 
             thread::spawn(move || {
@@ -85,16 +54,14 @@ fn main() {
                     for _ in 0..samples_per_pixel {
                         let u = (i as f64 + rng.gen_range(0.0..1.0)) / (width - 1) as f64;
                         let v = (j as f64 + rng.gen_range(0.0..1.0)) / (height - 1) as f64;
-
-                        // `cam`を参照として使用
                         let r = cam.get_ray(u, v);
                         pixel_color += r.color(&background, &*world, max_depth);
                     }
                     let mut buf = buffer.write().unwrap();
                     let (r, g, b) = pixel_color.get_color(samples_per_pixel);
-                    buf[j * width * 3 + i * 3] = r;
-                    buf[j * width * 3 + i * 3 + 1] = g;
-                    buf[j * width * 3 + i * 3 + 2] = b;
+                    buf[(height - j - 1) * width * 3 + i * 3] = r;
+                    buf[(height - j - 1) * width * 3 + i * 3 + 1] = g;
+                    buf[(height - j - 1) * width * 3 + i * 3 + 2] = b;
                     let mut pb = pb.write().unwrap();
                     pb.update();
                 }
