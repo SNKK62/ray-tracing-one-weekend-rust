@@ -2,20 +2,20 @@ use crate::hittable::{HitRecord, Hittable, AABB};
 use crate::material;
 use crate::ray;
 use crate::vec3;
-use std::{cell::RefCell, rc::Rc};
+use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct Sphere {
     center: vec3::Point3,
     radius: f64,
-    material: Rc<RefCell<dyn material::Material>>,
+    material: Arc<RwLock<dyn material::Material>>,
 }
 
 impl Sphere {
     pub fn new(
         center: &vec3::Point3,
         radius: f64,
-        material: Rc<RefCell<dyn material::Material>>,
+        material: Arc<RwLock<dyn material::Material>>,
     ) -> Self {
         Self {
             center: *center,
@@ -44,7 +44,7 @@ impl Hittable for Sphere {
                 record.v = sphere_v;
                 let outward_normal = (record.p - self.center) / self.radius;
                 self.set_front_face(r, &outward_normal, record);
-                record.material = Some(Rc::clone(&self.material));
+                record.material = Some(Arc::clone(&self.material));
                 return true;
             }
             let temp = (-half_b + root) / a;
@@ -57,7 +57,7 @@ impl Hittable for Sphere {
                 record.v = sphere_v;
                 let outward_normal = (record.p - self.center) / self.radius;
                 self.set_front_face(r, &outward_normal, record);
-                record.material = Some(Rc::clone(&self.material));
+                record.material = Some(Arc::clone(&self.material));
                 return true;
             }
         }

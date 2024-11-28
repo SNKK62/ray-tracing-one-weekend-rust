@@ -2,19 +2,19 @@ use crate::hittable::{BvhNode, Hittable, HittableList, Sphere};
 use crate::material::Lambertian;
 use crate::texture::NoiseTexture;
 use crate::vec3::Point3;
-use std::{cell::RefCell, rc::Rc};
+use std::sync::{Arc, RwLock};
 
 pub fn scene() -> HittableList {
-    let mut world: Vec<Rc<dyn Hittable>> = Vec::new();
+    let mut world: Vec<Arc<dyn Hittable>> = Vec::new();
     let pertext = NoiseTexture::new(3.0);
 
-    let sphere_material = Rc::new(RefCell::new(Lambertian::new(Rc::new(pertext))));
-    world.push(Rc::new(Sphere::new(
+    let sphere_material = Arc::new(RwLock::new(Lambertian::new(Arc::new(pertext))));
+    world.push(Arc::new(Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
         1000.0,
         sphere_material.clone(),
     )));
-    world.push(Rc::new(Sphere::new(
+    world.push(Arc::new(Sphere::new(
         &Point3::new(0.0, 2.0, 0.0),
         2.0,
         sphere_material.clone(),
@@ -23,6 +23,6 @@ pub fn scene() -> HittableList {
     let bvh = BvhNode::new(&mut world, 0.0, 0.0);
 
     let mut world = HittableList::new();
-    world.add(Rc::new(bvh));
+    world.add(Arc::new(bvh));
     world
 }

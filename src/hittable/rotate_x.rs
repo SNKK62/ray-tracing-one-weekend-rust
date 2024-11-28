@@ -2,11 +2,11 @@ use super::{HitRecord, Hittable, AABB};
 use crate::degrees_to_radians;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
-use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct RotateX {
-    ptr: Rc<dyn Hittable>,
+    ptr: Arc<dyn Hittable>,
     sin_theta: f64,
     cos_theta: f64,
     hasbox: bool,
@@ -14,7 +14,7 @@ pub struct RotateX {
 }
 
 impl RotateX {
-    pub fn new(ptr: Rc<dyn Hittable>, angle: f64) -> Self {
+    pub fn new(ptr: Arc<dyn Hittable>, angle: f64) -> Self {
         let radians = degrees_to_radians(angle);
         let sin_theta = f64::sin(radians);
         let cos_theta = f64::cos(radians);

@@ -1,14 +1,14 @@
 pub use super::Material;
 pub use crate::texture::Texture;
-pub use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct DiffuseLight {
-    pub emit: Rc<dyn Texture>,
+    pub emit: Arc<dyn Texture>,
 }
 
 impl DiffuseLight {
-    pub fn new(emit: Rc<dyn Texture>) -> Self {
+    pub fn new(emit: Arc<dyn Texture>) -> Self {
         Self { emit }
     }
 }

@@ -2,7 +2,7 @@ use crate::hittable::{surrounding_box, HitRecord, Hittable, AABB};
 use crate::material;
 use crate::ray;
 use crate::vec3;
-use std::{cell::RefCell, rc::Rc};
+use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct MovingSphere {
@@ -11,7 +11,7 @@ pub struct MovingSphere {
     time0: f64,
     time1: f64,
     radius: f64,
-    material: Rc<RefCell<dyn material::Material>>,
+    material: Arc<RwLock<dyn material::Material>>,
 }
 
 impl MovingSphere {
@@ -19,7 +19,7 @@ impl MovingSphere {
         center0: &vec3::Point3,
         center1: &vec3::Point3,
         radius: f64,
-        material: Rc<RefCell<dyn material::Material>>,
+        material: Arc<RwLock<dyn material::Material>>,
         time0: f64,
         time1: f64,
     ) -> Self {
@@ -54,7 +54,7 @@ impl Hittable for MovingSphere {
                 record.p = r.at(record.t);
                 let outward_normal = (record.p - self.center(r.time)) / self.radius;
                 self.set_front_face(r, &outward_normal, record);
-                record.material = Some(Rc::clone(&self.material));
+                record.material = Some(Arc::clone(&self.material));
                 return true;
             }
             let temp = (-half_b + root) / a;
@@ -63,7 +63,7 @@ impl Hittable for MovingSphere {
                 record.p = r.at(record.t);
                 let outward_normal = (record.p - self.center(r.time)) / self.radius;
                 self.set_front_face(r, &outward_normal, record);
-                record.material = Some(Rc::clone(&self.material));
+                record.material = Some(Arc::clone(&self.material));
                 return true;
             }
         }

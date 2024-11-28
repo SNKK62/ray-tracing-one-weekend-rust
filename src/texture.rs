@@ -15,6 +15,6 @@ pub use image_texture::ImageTexture;
 
 use std::fmt::Debug;
 
-pub trait Texture: Debug {
+pub trait Texture: Debug + Send + Sync {
     fn value(&self, u: f64, v: f64, p: &Vec3) -> Color;
 }

@@ -1,12 +1,11 @@
 use super::{HitRecord, Hittable, AABB};
 use crate::material::Material;
 use crate::vec3::Vec3;
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct YZRect {
-    mp: Rc<RefCell<dyn Material>>,
+    mp: Arc<RwLock<dyn Material>>,
     y0: f64,
     y1: f64,
     z0: f64,
@@ -21,7 +20,7 @@ impl YZRect {
         z0: f64,
         z1: f64,
         k: f64,
-        material: Rc<RefCell<dyn Material>>,
+        material: Arc<RwLock<dyn Material>>,
     ) -> Self {
         YZRect {
             mp: material,

@@ -1,8 +1,7 @@
 use super::{HitRecord, Hittable, HittableList, XYRect, XZRect, YZRect, AABB};
 use crate::material::Material;
 use crate::vec3::Point3;
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct Cuboid {
@@ -12,9 +11,9 @@ pub struct Cuboid {
 }
 
 impl Cuboid {
-    pub fn new(p0: &Point3, p1: &Point3, mat: Rc<RefCell<dyn Material>>) -> Self {
+    pub fn new(p0: &Point3, p1: &Point3, mat: Arc<RwLock<dyn Material>>) -> Self {
         let mut sides = HittableList::new();
-        sides.add(Rc::new(XYRect::new(
+        sides.add(Arc::new(XYRect::new(
             p0.x(),
             p1.x(),
             p0.y(),
@@ -22,7 +21,7 @@ impl Cuboid {
             p1.z(),
             mat.clone(),
         )));
-        sides.add(Rc::new(XYRect::new(
+        sides.add(Arc::new(XYRect::new(
             p0.x(),
             p1.x(),
             p0.y(),
@@ -30,7 +29,7 @@ impl Cuboid {
             p0.z(),
             mat.clone(),
         )));
-        sides.add(Rc::new(XZRect::new(
+        sides.add(Arc::new(XZRect::new(
             p0.x(),
             p1.x(),
             p0.z(),
@@ -38,7 +37,7 @@ impl Cuboid {
             p1.y(),
             mat.clone(),
         )));
-        sides.add(Rc::new(XZRect::new(
+        sides.add(Arc::new(XZRect::new(
             p0.x(),
             p1.x(),
             p0.z(),
@@ -46,7 +45,7 @@ impl Cuboid {
             p0.y(),
             mat.clone(),
         )));
-        sides.add(Rc::new(YZRect::new(
+        sides.add(Arc::new(YZRect::new(
             p0.y(),
             p1.y(),
             p0.z(),
@@ -54,7 +53,7 @@ impl Cuboid {
             p1.x(),
             mat.clone(),
         )));
-        sides.add(Rc::new(YZRect::new(
+        sides.add(Arc::new(YZRect::new(
             p0.y(),
             p1.y(),
             p0.z(),
