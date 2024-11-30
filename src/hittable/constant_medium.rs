@@ -1,23 +1,22 @@
-use super::{HitRecord, Hittable, AABB};
-use crate::material::{Isotropic, Material};
+use super::{HitRecord, Hittable, HittableEnum, AABB};
+use crate::material::{Isotropic, MaterialEnum};
 use crate::ray::Ray;
-use crate::texture::Texture;
+use crate::texture::TextureEnum;
 use crate::vec3::Vec3;
 use rand::Rng;
-use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct ConstantMedium {
-    boundary: Arc<dyn Hittable>,
-    phase_function: Arc<RwLock<dyn Material>>,
+    boundary: HittableEnum,
+    phase_function: MaterialEnum,
     neg_inv_density: f64,
 }
 
 impl ConstantMedium {
-    pub fn new(boundary: Arc<dyn Hittable>, density: f64, tex: Arc<dyn Texture>) -> Self {
+    pub fn new(boundary: HittableEnum, density: f64, tex: TextureEnum) -> Self {
         Self {
             boundary,
-            phase_function: Arc::new(RwLock::new(Isotropic::new(tex))),
+            phase_function: MaterialEnum::Isotropic(Isotropic::new(&tex)),
             neg_inv_density: -1.0 / density,
         }
     }

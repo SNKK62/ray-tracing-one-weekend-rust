@@ -1,34 +1,33 @@
-use crate::hittable::{BvhNode, Hittable, HittableList, Sphere, XYRect};
-use crate::material::{DiffuseLight, Lambertian};
-use crate::texture::{NoiseTexture, SolidColor};
+use crate::hittable::{BvhNode, HittableEnum, HittableList, Sphere, XYRect};
+use crate::material::{DiffuseLight, Lambertian, MaterialEnum};
+use crate::texture::{NoiseTexture, SolidColor, TextureEnum};
 use crate::vec3::{Color, Point3};
-use std::sync::{Arc, RwLock};
 
-pub fn scene() -> HittableList {
-    let mut world: Vec<Arc<dyn Hittable>> = Vec::new();
-    let pertext = NoiseTexture::new(4.0);
+pub fn scene() -> HittableEnum {
+    let mut world: Vec<HittableEnum> = Vec::new();
+    let pertext = TextureEnum::NoiseTexture(NoiseTexture::new(4.0));
 
-    let sphere_material = Arc::new(RwLock::new(Lambertian::new(Arc::new(pertext))));
-    world.push(Arc::new(Sphere::new(
+    let sphere_material = MaterialEnum::Lambertian(Lambertian::new(&pertext));
+    world.push(HittableEnum::Sphere(Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
         1000.0,
         sphere_material.clone(),
     )));
-    world.push(Arc::new(Sphere::new(
+    world.push(HittableEnum::Sphere(Sphere::new(
         &Point3::new(0.0, 2.0, 0.0),
         2.0,
         sphere_material.clone(),
     )));
 
-    let difflight = Arc::new(RwLock::new(DiffuseLight::new(Arc::new(SolidColor::new(
-        Color::new(4.0, 4.0, 4.0),
-    )))));
-    world.push(Arc::new(Sphere::new(
+    let difflight = MaterialEnum::DiffuseLight(DiffuseLight::new(&TextureEnum::SolidColor(
+        SolidColor::new(Color::new(4.0, 4.0, 4.0)),
+    )));
+    world.push(HittableEnum::Sphere(Sphere::new(
         &Point3::new(0.0, 7.0, 0.0),
         2.0,
         difflight.clone(),
     )));
-    world.push(Arc::new(XYRect::new(
+    world.push(HittableEnum::XYRect(XYRect::new(
         3.0,
         5.0,
         1.0,
@@ -37,9 +36,9 @@ pub fn scene() -> HittableList {
         difflight.clone(),
     )));
 
-    let bvh = BvhNode::new(&mut world, 0.0, 0.0);
+    let bvh = HittableEnum::BvhNode(Box::new(BvhNode::new(&mut world, 0.0, 0.0)));
 
     let mut world = HittableList::new();
-    world.add(Arc::new(bvh));
-    world
+    world.add(bvh);
+    HittableEnum::HittableList(Box::new(world))
 }

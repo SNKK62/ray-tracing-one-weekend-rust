@@ -1,11 +1,10 @@
 use super::{HitRecord, Hittable, AABB};
-use crate::material::Material;
+use crate::material::MaterialEnum;
 use crate::vec3::Vec3;
-use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct YZRect {
-    mp: Arc<RwLock<dyn Material>>,
+    mp: MaterialEnum,
     y0: f64,
     y1: f64,
     z0: f64,
@@ -14,14 +13,7 @@ pub struct YZRect {
 }
 
 impl YZRect {
-    pub fn new(
-        y0: f64,
-        y1: f64,
-        z0: f64,
-        z1: f64,
-        k: f64,
-        material: Arc<RwLock<dyn Material>>,
-    ) -> Self {
+    pub fn new(y0: f64, y1: f64, z0: f64, z1: f64, k: f64, material: MaterialEnum) -> Self {
         YZRect {
             mp: material,
             y0,

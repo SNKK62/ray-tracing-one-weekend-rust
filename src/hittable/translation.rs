@@ -1,16 +1,20 @@
-use super::{HitRecord, Hittable, AABB};
+use super::{HitRecord, Hittable, HittableEnum, AABB};
 use crate::vec3::Vec3;
-use std::sync::Arc;
+
+use std::boxed::Box;
 
 #[derive(Debug, Clone)]
 pub struct Translation {
     offset: Vec3,
-    ptr: Arc<dyn Hittable>,
+    ptr: Box<HittableEnum>,
 }
 
 impl Translation {
-    pub fn new(ptr: Arc<dyn Hittable>, offset: Vec3) -> Self {
-        Translation { ptr, offset }
+    pub fn new(ptr: HittableEnum, offset: Vec3) -> Self {
+        Translation {
+            ptr: Box::new(ptr),
+            offset,
+        }
     }
 }
 

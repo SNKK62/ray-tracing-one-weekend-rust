@@ -1,15 +1,14 @@
 pub use super::Material;
-pub use crate::texture::Texture;
-use std::sync::Arc;
+pub use crate::texture::TextureEnum;
 
 #[derive(Debug, Clone)]
 pub struct DiffuseLight {
-    pub emit: Arc<dyn Texture>,
+    pub emit: TextureEnum,
 }
 
 impl DiffuseLight {
-    pub fn new(emit: Arc<dyn Texture>) -> Self {
-        Self { emit }
+    pub fn new(emit: &TextureEnum) -> Self {
+        Self { emit: emit.clone() }
     }
 }
 

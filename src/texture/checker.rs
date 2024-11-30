@@ -1,15 +1,18 @@
-use crate::texture::Texture;
-use std::sync::Arc;
+use crate::texture::TextureEnum;
+use std::boxed::Box;
 
 #[derive(Debug, Clone)]
 pub struct Checker {
-    odd: Arc<dyn Texture>,
-    even: Arc<dyn Texture>,
+    odd: Box<TextureEnum>,
+    even: Box<TextureEnum>,
 }
 
 impl Checker {
-    pub fn new(odd: Arc<dyn Texture>, even: Arc<dyn Texture>) -> Self {
-        Self { odd, even }
+    pub fn new(odd: TextureEnum, even: TextureEnum) -> Self {
+        Self {
+            odd: Box::new(odd),
+            even: Box::new(even),
+        }
     }
 }
 

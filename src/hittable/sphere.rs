@@ -1,22 +1,17 @@
 use crate::hittable::{HitRecord, Hittable, AABB};
-use crate::material;
+use crate::material::MaterialEnum;
 use crate::ray;
 use crate::vec3;
-use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct Sphere {
     center: vec3::Point3,
     radius: f64,
-    material: Arc<RwLock<dyn material::Material>>,
+    material: MaterialEnum,
 }
 
 impl Sphere {
-    pub fn new(
-        center: &vec3::Point3,
-        radius: f64,
-        material: Arc<RwLock<dyn material::Material>>,
-    ) -> Self {
+    pub fn new(center: &vec3::Point3, radius: f64, material: MaterialEnum) -> Self {
         Self {
             center: *center,
             radius,
@@ -44,7 +39,7 @@ impl Hittable for Sphere {
                 record.v = sphere_v;
                 let outward_normal = (record.p - self.center) / self.radius;
                 self.set_front_face(r, &outward_normal, record);
-                record.material = Some(Arc::clone(&self.material));
+                record.material = Some(self.material.clone());
                 return true;
             }
             let temp = (-half_b + root) / a;
@@ -57,7 +52,7 @@ impl Hittable for Sphere {
                 record.v = sphere_v;
                 let outward_normal = (record.p - self.center) / self.radius;
                 self.set_front_face(r, &outward_normal, record);
-                record.material = Some(Arc::clone(&self.material));
+                record.material = Some(self.material.clone());
                 return true;
             }
         }

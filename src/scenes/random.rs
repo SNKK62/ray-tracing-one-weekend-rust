@@ -1,18 +1,17 @@
-use crate::hittable::{BvhNode, Hittable, HittableList, Sphere};
-use crate::material::{Dielectric, Lambertian, Material, Metal};
-use crate::texture::{Checker, SolidColor};
+use crate::hittable::{BvhNode, HittableEnum, HittableList, Sphere};
+use crate::material::{Dielectric, Lambertian, MaterialEnum, Metal};
+use crate::texture::{Checker, SolidColor, TextureEnum};
 use crate::vec3::{Color, Point3};
 use rand::Rng;
-use std::sync::{Arc, RwLock};
 
-pub fn scene() -> HittableList {
-    let mut world: Vec<Arc<dyn Hittable>> = Vec::new();
-    let checker = Checker::new(
-        Arc::new(SolidColor::new(Color::new(0.2, 0.3, 0.1))),
-        Arc::new(SolidColor::new(Color::new(0.9, 0.9, 0.9))),
-    );
-    let ground_material = Arc::new(RwLock::new(Lambertian::new(Arc::new(checker))));
-    world.push(Arc::new(Sphere::new(
+pub fn scene() -> HittableEnum {
+    let mut world: Vec<HittableEnum> = Vec::new();
+    let checker = TextureEnum::Checker(Checker::new(
+        TextureEnum::SolidColor(SolidColor::new(Color::new(0.2, 0.3, 0.1))),
+        TextureEnum::SolidColor(SolidColor::new(Color::new(0.9, 0.9, 0.9))),
+    ));
+    let ground_material = MaterialEnum::Lambertian(Lambertian::new(&checker));
+    world.push(HittableEnum::Sphere(Sphere::new(
         &Point3::new(0.0, -1000.0, 0.0),
         1000.0,
         ground_material.clone(),
@@ -29,51 +28,63 @@ pub fn scene() -> HittableList {
 
             let radius = 0.2;
             if (center - Point3::new(4.0, radius, 0.0)).len() > 0.9 {
-                let sphere_material: Arc<RwLock<dyn Material>>;
+                let sphere_material: MaterialEnum;
                 if choose_mat < 0.7 {
                     // diffuse
                     let albedo = Color::rand() * Color::rand();
-                    sphere_material = Arc::new(RwLock::new(Lambertian::new(Arc::new(
-                        SolidColor::new(albedo),
-                    ))));
-                    world.push(Arc::new(Sphere::new(&center, radius, sphere_material)));
+                    sphere_material = MaterialEnum::Lambertian(Lambertian::new(
+                        &TextureEnum::SolidColor(SolidColor::new(albedo)),
+                    ));
+                    world.push(HittableEnum::Sphere(Sphere::new(
+                        &center,
+                        radius,
+                        sphere_material,
+                    )));
                 } else if choose_mat < 0.85 {
                     // metal
                     let albedo = Color::rand_range(0.5, 1.0);
                     let fuzz = rand::thread_rng().gen_range(0.0..0.5);
-                    sphere_material = Arc::new(RwLock::new(Metal::new(&albedo, fuzz)));
-                    world.push(Arc::new(Sphere::new(&center, radius, sphere_material)));
+                    sphere_material = MaterialEnum::Metal(Metal::new(&albedo, fuzz));
+                    world.push(HittableEnum::Sphere(Sphere::new(
+                        &center,
+                        radius,
+                        sphere_material,
+                    )));
                 } else {
                     // glass
-                    sphere_material = Arc::new(RwLock::new(Dielectric::new(1.5)));
-                    world.push(Arc::new(Sphere::new(&center, radius, sphere_material)));
+                    sphere_material = MaterialEnum::Dielectric(Dielectric::new(1.5));
+                    world.push(HittableEnum::Sphere(Sphere::new(
+                        &center,
+                        radius,
+                        sphere_material,
+                    )));
                 }
             }
         }
     }
 
-    let material1 = Arc::new(RwLock::new(Dielectric::new(1.5)));
-    world.push(Arc::new(Sphere::new(
+    let material1 = MaterialEnum::Dielectric(Dielectric::new(1.5));
+    world.push(HittableEnum::Sphere(Sphere::new(
         &Point3::new(0.0, 1.0, 0.0),
         1.0,
         material1,
     )));
-    let material2 = Arc::new(RwLock::new(Lambertian::new(Arc::new(SolidColor::new(
-        Color::new(0.4, 0.2, 0.1),
-    )))));
-    world.push(Arc::new(Sphere::new(
+    let material2 = MaterialEnum::Lambertian(Lambertian::new(&TextureEnum::SolidColor(
+        SolidColor::new(Color::new(0.4, 0.2, 0.1)),
+    )));
+    world.push(HittableEnum::Sphere(Sphere::new(
         &Point3::new(-4.0, 1.0, 0.0),
         1.0,
         material2,
     )));
-    let material3 = Arc::new(RwLock::new(Metal::new(&Color::new(0.7, 0.6, 0.5), 0.0)));
-    world.push(Arc::new(Sphere::new(
+    let material3 = MaterialEnum::Metal(Metal::new(&Color::new(0.7, 0.6, 0.5), 0.0));
+    world.push(HittableEnum::Sphere(Sphere::new(
         &Point3::new(4.0, 1.0, 0.0),
         1.0,
         material3,
     )));
-    let bvh = BvhNode::new(&mut world, 0.0, 1.0);
+    let bvh = HittableEnum::BvhNode(Box::new(BvhNode::new(&mut world, 0.0, 1.0)));
     let mut world = HittableList::new();
-    world.add(Arc::new(bvh));
-    world
+    world.add(bvh);
+    HittableEnum::HittableList(Box::new(world))
 }

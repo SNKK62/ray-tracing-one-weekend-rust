@@ -1,8 +1,7 @@
 use crate::hittable::{surrounding_box, HitRecord, Hittable, AABB};
-use crate::material;
+use crate::material::MaterialEnum;
 use crate::ray;
 use crate::vec3;
-use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Clone)]
 pub struct MovingSphere {
@@ -11,7 +10,7 @@ pub struct MovingSphere {
     time0: f64,
     time1: f64,
     radius: f64,
-    material: Arc<RwLock<dyn material::Material>>,
+    material: MaterialEnum,
 }
 
 impl MovingSphere {
@@ -19,7 +18,7 @@ impl MovingSphere {
         center0: &vec3::Point3,
         center1: &vec3::Point3,
         radius: f64,
-        material: Arc<RwLock<dyn material::Material>>,
+        material: MaterialEnum,
         time0: f64,
         time1: f64,
     ) -> Self {
@@ -54,7 +53,7 @@ impl Hittable for MovingSphere {
                 record.p = r.at(record.t);
                 let outward_normal = (record.p - self.center(r.time)) / self.radius;
                 self.set_front_face(r, &outward_normal, record);
-                record.material = Some(Arc::clone(&self.material));
+                record.material = Some(self.material.clone());
                 return true;
             }
             let temp = (-half_b + root) / a;
@@ -63,7 +62,7 @@ impl Hittable for MovingSphere {
                 record.p = r.at(record.t);
                 let outward_normal = (record.p - self.center(r.time)) / self.radius;
                 self.set_front_face(r, &outward_normal, record);
-                record.material = Some(Arc::clone(&self.material));
+                record.material = Some(self.material.clone());
                 return true;
             }
         }

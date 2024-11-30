@@ -23,7 +23,7 @@ impl Ray {
     pub fn color(
         &self,
         background: &vec3::Color,
-        world: &dyn hittable::Hittable,
+        world: &hittable::HittableEnum,
         depth: usize,
     ) -> vec3::Color {
         if depth == 0 {
@@ -41,15 +41,11 @@ impl Ray {
         }
         let mat = mat.unwrap();
 
-        let emitted = mat.read().unwrap().emitted(rec.u, rec.v, &rec.p);
+        let emitted = mat.emitted(rec.u, rec.v, &rec.p);
         let mut scattered = Self::new(&rec.p, &rec.normal, 0.0); // Temporary Ray
         let mut attenuation = vec3::Color::zero();
 
-        if !mat
-            .read()
-            .unwrap()
-            .scatter(self, &rec, &mut attenuation, &mut scattered)
-        {
+        if !mat.scatter(self, &rec, &mut attenuation, &mut scattered) {
             return emitted;
         }
 

@@ -1,10 +1,9 @@
-use super::{surrounding_box, HitRecord, Hittable, AABB};
+use super::{surrounding_box, HitRecord, Hittable, HittableEnum, AABB};
 use crate::{ray, vec3};
-use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct HittableList {
-    pub objects: Vec<Arc<dyn Hittable>>,
+    pub objects: Vec<HittableEnum>,
 }
 
 impl Default for HittableList {
@@ -20,7 +19,7 @@ impl HittableList {
         }
     }
 
-    pub fn add(&mut self, object: Arc<dyn Hittable>) {
+    pub fn add(&mut self, object: HittableEnum) {
         self.objects.push(object);
     }
 

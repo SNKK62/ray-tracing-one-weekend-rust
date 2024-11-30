@@ -1,18 +1,19 @@
 use super::Material;
 use crate::hittable::HitRecord;
 use crate::ray::Ray;
-use crate::texture::Texture;
+use crate::texture::TextureEnum;
 use crate::vec3::{Color, Vec3};
-use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct Isotropic {
-    albedo: Arc<dyn Texture>,
+    albedo: TextureEnum,
 }
 
 impl Isotropic {
-    pub fn new(albedo: Arc<dyn Texture>) -> Self {
-        Self { albedo }
+    pub fn new(albedo: &TextureEnum) -> Self {
+        Self {
+            albedo: albedo.clone(),
+        }
     }
 }
 

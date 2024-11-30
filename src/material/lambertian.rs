@@ -1,16 +1,17 @@
 use super::Material;
-use crate::texture::Texture;
+use crate::texture::TextureEnum;
 use crate::{hittable, ray, vec3};
-use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct Lambertian {
-    albedo: Arc<dyn Texture>,
+    albedo: TextureEnum,
 }
 
 impl Lambertian {
-    pub fn new(albedo: Arc<dyn Texture>) -> Self {
-        Self { albedo }
+    pub fn new(albedo: &TextureEnum) -> Self {
+        Self {
+            albedo: albedo.clone(),
+        }
     }
 }
 

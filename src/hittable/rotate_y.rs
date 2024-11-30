@@ -1,12 +1,11 @@
-use super::{HitRecord, Hittable, AABB};
+use super::{HitRecord, Hittable, HittableEnum, AABB};
 use crate::degrees_to_radians;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
-use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct RotateY {
-    ptr: Arc<dyn Hittable>,
+    ptr: HittableEnum,
     sin_theta: f64,
     cos_theta: f64,
     hasbox: bool,
@@ -14,7 +13,7 @@ pub struct RotateY {
 }
 
 impl RotateY {
-    pub fn new(ptr: Arc<dyn Hittable>, angle: f64) -> Self {
+    pub fn new(ptr: HittableEnum, angle: f64) -> Self {
         let radians = degrees_to_radians(angle);
         let sin_theta = f64::sin(radians);
         let cos_theta = f64::cos(radians);

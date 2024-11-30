@@ -1,6 +1,6 @@
 use image::RgbImage;
 use rand::Rng;
-use ray_tracer_rs::{camera, hittable::Hittable, progress, scenes, vec3};
+use ray_tracer_rs::{camera, hittable::HittableEnum, progress, scenes, vec3};
 use std::sync::{Arc, RwLock};
 use std::thread;
 use std::time::Instant;
@@ -11,7 +11,7 @@ fn main() {
     // let width = 384;
     let width = 512;
     let height = (width as f64 / aspect_ratio) as usize;
-    let samples_per_pixel = 5000;
+    let samples_per_pixel = 50;
     let max_depth = 100;
 
     // NOTE: The following code is for the camera position for random scenes
@@ -26,7 +26,7 @@ fn main() {
     let background = vec3::Color::zero();
 
     let pb = Arc::new(RwLock::new(progress::ProgressBar::new(width * height)));
-    let world: Arc<dyn Hittable> = Arc::new(scenes::final_scene::scene());
+    let world: Arc<HittableEnum> = Arc::new(scenes::final_scene::scene());
     let cam = Arc::new(camera::Camera::new(
         lookfrom,
         lookat,
@@ -55,7 +55,7 @@ fn main() {
                         let u = (i as f64 + rng.gen_range(0.0..1.0)) / (width - 1) as f64;
                         let v = (j as f64 + rng.gen_range(0.0..1.0)) / (height - 1) as f64;
                         let r = cam.get_ray(u, v);
-                        pixel_color += r.color(&background, &*world, max_depth);
+                        pixel_color += r.color(&background, &world, max_depth);
                     }
                     let mut buf = buffer.write().unwrap();
                     let (r, g, b) = pixel_color.get_color(samples_per_pixel);
