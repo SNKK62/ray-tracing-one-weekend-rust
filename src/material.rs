@@ -19,7 +19,7 @@ pub use isotropic::Isotropic;
 
 use std::fmt::Debug;
 
-pub trait Material: Debug + Send + Sync {
+pub trait Material {
     fn scatter(
         &self,
         r_in: &ray::Ray,
