@@ -1,10 +1,13 @@
 use image::RgbImage;
 use rand::Rng;
-use ray_tracer_rs::{camera, hittable::HittableEnum, progress, scenes, vec3};
+#[cfg(feature = "execution")]
+use ray_tracer_rs::progress;
+use ray_tracer_rs::{camera, hittable::HittableEnum, scenes, vec3};
 use std::sync::{Arc, RwLock};
 use std::thread;
 use std::time::Instant;
 
+#[cfg(feature = "execution")]
 fn main() {
     // let aspect_ratio = 16.0 / 9.0;
     let aspect_ratio = 1.0;

@@ -1,7 +1,9 @@
+#[cfg(feature = "execution")]
 use libc::{ioctl, winsize, STDERR_FILENO, TIOCGWINSZ};
 use std::io::{self, Write};
 use std::mem::zeroed;
 
+#[cfg(feature = "execution")]
 fn get_terminal_width() -> usize {
     unsafe {
         let mut ws: winsize = zeroed();
@@ -13,11 +15,13 @@ fn get_terminal_width() -> usize {
     }
 }
 
+#[cfg(feature = "execution")]
 pub struct ProgressBar {
     max_idx: usize,
     last_idx: usize,
 }
 
+#[cfg(feature = "execution")]
 impl ProgressBar {
     pub fn new(max_idx: usize) -> Self {
         ProgressBar {
