@@ -1,7 +1,8 @@
 use crate::texture::TextureEnum;
+use serde::{Deserialize, Serialize};
 use std::boxed::Box;
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Checker {
     odd: Box<TextureEnum>,
     even: Box<TextureEnum>,

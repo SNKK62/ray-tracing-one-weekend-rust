@@ -13,13 +13,14 @@ pub use noise_texture::NoiseTexture;
 pub mod image_texture;
 pub use image_texture::ImageTexture;
 
+use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
 pub trait Texture {
     fn value(&self, u: f64, v: f64, p: &Vec3) -> Color;
 }
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum TextureEnum {
     SolidColor(SolidColor),
     Checker(Checker),

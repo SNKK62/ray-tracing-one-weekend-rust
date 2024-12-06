@@ -40,6 +40,7 @@ pub use rotate_z::RotateZ;
 pub mod constant_medium;
 pub use constant_medium::ConstantMedium;
 
+use serde::{Deserialize, Serialize};
 use std::boxed::Box;
 use std::fmt::Debug;
 
@@ -98,7 +99,7 @@ pub trait Hittable {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum HittableEnum {
     HittableList(Box<HittableList>),
     BvhNode(Box<BvhNode>),

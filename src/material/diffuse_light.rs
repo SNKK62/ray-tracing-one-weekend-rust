@@ -1,7 +1,8 @@
 pub use super::Material;
 pub use crate::texture::TextureEnum;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct DiffuseLight {
     pub emit: TextureEnum,
 }

@@ -2,8 +2,9 @@ use crate::degrees_to_radians;
 use crate::ray::Ray;
 use crate::vec3;
 use rand::Rng;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct Camera {
     origin: vec3::Point3,
     lower_left_corner: vec3::Point3,

@@ -1,8 +1,9 @@
 use super::Material;
 use crate::texture::TextureEnum;
 use crate::{hittable, ray, vec3};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Lambertian {
     albedo: TextureEnum,
 }

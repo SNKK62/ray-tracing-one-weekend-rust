@@ -1,8 +1,9 @@
 use super::noise::perlin::Perlin;
 use super::Texture;
 use crate::vec3::{Color, Vec3};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct NoiseTexture {
     noise: Perlin,
     scale: f64,

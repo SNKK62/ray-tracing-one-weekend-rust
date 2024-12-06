@@ -1,6 +1,7 @@
 use crate::vec3::Color;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct SolidColor {
     color_value: Color,
 }

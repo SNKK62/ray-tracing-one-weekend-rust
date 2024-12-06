@@ -1,6 +1,7 @@
 use super::{reflect, refract, Material};
 use crate::{hittable, ray, vec3};
 use rand::Rng;
+use serde::{Deserialize, Serialize};
 
 fn schlick(cosine: f64, ref_idx: f64) -> f64 {
     let mut r0 = (1.0 - ref_idx) / (1.0 + ref_idx);
@@ -8,7 +9,7 @@ fn schlick(cosine: f64, ref_idx: f64) -> f64 {
     r0 + (1.0 - r0) * (1.0 - cosine).powi(5)
 }
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Dielectric {
     ref_idx: f64,
 }

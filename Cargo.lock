@@ -686,6 +686,7 @@ dependencies = [
  "image",
  "libc",
  "rand",
+ "serde",
 ]
 
 [[package]]

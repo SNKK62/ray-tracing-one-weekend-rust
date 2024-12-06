@@ -1,5 +1,6 @@
 use super::Texture;
 use image::GenericImageView;
+use serde::{Deserialize, Serialize};
 
 struct ImageData {
     width: u32,
@@ -23,7 +24,7 @@ fn load_image(path: &str) -> ImageData {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ImageTexture {
     data: Vec<u8>,
     width: u32,

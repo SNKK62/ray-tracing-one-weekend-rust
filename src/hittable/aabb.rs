@@ -1,6 +1,7 @@
 use crate::{ray, vec3};
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct AABB {
     pub(super) min: vec3::Point3,
     pub(super) max: vec3::Point3,

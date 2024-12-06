@@ -17,6 +17,7 @@ pub use diffuse_light::DiffuseLight;
 pub mod isotropic;
 pub use isotropic::Isotropic;
 
+use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
 pub trait Material {
@@ -32,7 +33,7 @@ pub trait Material {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum MaterialEnum {
     Lambertian(Lambertian),
     Metal(Metal),

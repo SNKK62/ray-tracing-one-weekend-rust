@@ -1,8 +1,9 @@
 use super::{surrounding_box, HitRecord, Hittable, HittableEnum, AABB};
 use crate::{ray, vec3};
+use serde::{Deserialize, Serialize};
 use std::boxed::Box;
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct BvhNode {
     left: HittableEnum,
     right: HittableEnum,

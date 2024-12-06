@@ -3,8 +3,9 @@ use crate::hittable::HitRecord;
 use crate::ray::Ray;
 use crate::texture::TextureEnum;
 use crate::vec3::{Color, Vec3};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Isotropic {
     albedo: TextureEnum,
 }

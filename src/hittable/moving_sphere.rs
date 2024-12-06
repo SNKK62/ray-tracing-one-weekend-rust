@@ -2,8 +2,9 @@ use crate::hittable::{surrounding_box, HitRecord, Hittable, AABB};
 use crate::material::MaterialEnum;
 use crate::ray;
 use crate::vec3;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MovingSphere {
     center0: vec3::Point3,
     center1: vec3::Point3,

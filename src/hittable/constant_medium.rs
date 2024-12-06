@@ -4,8 +4,9 @@ use crate::ray::Ray;
 use crate::texture::TextureEnum;
 use crate::vec3::Vec3;
 use rand::Rng;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ConstantMedium {
     boundary: HittableEnum,
     phase_function: MaterialEnum,

@@ -1,9 +1,10 @@
 use super::{HitRecord, Hittable, HittableEnum, AABB};
 use crate::vec3::Vec3;
 
+use serde::{Deserialize, Serialize};
 use std::boxed::Box;
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Translation {
     offset: Vec3,
     ptr: Box<HittableEnum>,

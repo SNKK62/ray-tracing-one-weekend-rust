@@ -1,7 +1,8 @@
 use super::{surrounding_box, HitRecord, Hittable, HittableEnum, AABB};
 use crate::{ray, vec3};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct HittableList {
     pub objects: Vec<HittableEnum>,
 }

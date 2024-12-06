@@ -1,8 +1,9 @@
 use super::{HitRecord, Hittable, AABB};
 use crate::material::MaterialEnum;
 use crate::vec3::Vec3;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct XYRect {
     mp: MaterialEnum,
     x0: f64,

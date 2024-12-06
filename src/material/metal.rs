@@ -1,7 +1,8 @@
 use super::{reflect, Material};
 use crate::{hittable, ray, vec3};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Metal {
     albedo: vec3::Color,
     fuzz: f64,

@@ -1,8 +1,9 @@
 use super::{HitRecord, Hittable, HittableEnum, HittableList, XYRect, XZRect, YZRect, AABB};
 use crate::material::MaterialEnum;
 use crate::vec3::Point3;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Cuboid {
     box_min: Point3,
     box_max: Point3,

@@ -1,6 +1,7 @@
 use crate::vec3::{Point3, Vec3};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Perlin {
     ranvec: Vec<Vec3>,
     perm_x: Vec<usize>,

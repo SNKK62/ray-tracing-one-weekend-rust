@@ -2,8 +2,9 @@ use super::{HitRecord, Hittable, HittableEnum, AABB};
 use crate::degrees_to_radians;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RotateZ {
     ptr: HittableEnum,
     sin_theta: f64,

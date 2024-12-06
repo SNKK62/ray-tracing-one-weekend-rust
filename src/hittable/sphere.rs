@@ -2,8 +2,9 @@ use crate::hittable::{HitRecord, Hittable, AABB};
 use crate::material::MaterialEnum;
 use crate::ray;
 use crate::vec3;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Sphere {
     center: vec3::Point3,
     radius: f64,
