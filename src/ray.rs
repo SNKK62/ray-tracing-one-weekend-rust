@@ -1,4 +1,4 @@
-use crate::hittable;
+use crate::hittable::{self, Hittable};
 use crate::vec3;
 
 pub struct Ray {

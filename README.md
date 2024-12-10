@@ -17,3 +17,9 @@ The outputs of the second week project are
 ![output](./images/cornel_box_pertty.png)
 
 ![output](./images/final2nd.png)
+
+## How to run
+
+```bash
+cargo run --release --features execution
+```

@@ -116,8 +116,8 @@ pub enum HittableEnum {
     ConstantMedium(Box<ConstantMedium>),
 }
 
-impl HittableEnum {
-    pub fn hit(&self, r: &ray::Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
+impl Hittable for HittableEnum {
+    fn hit(&self, r: &ray::Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
         match self {
             HittableEnum::HittableList(h) => h.hit(r, t_min, t_max, rec),
             HittableEnum::BvhNode(b) => b.hit(r, t_min, t_max, rec),
@@ -135,7 +135,7 @@ impl HittableEnum {
         }
     }
 
-    pub fn bounding_box(&self, time0: f64, time1: f64, output_box: &mut AABB) -> bool {
+    fn bounding_box(&self, time0: f64, time1: f64, output_box: &mut AABB) -> bool {
         match self {
             HittableEnum::HittableList(h) => h.bounding_box(time0, time1, output_box),
             HittableEnum::BvhNode(b) => b.bounding_box(time0, time1, output_box),
@@ -151,16 +151,6 @@ impl HittableEnum {
             HittableEnum::RotateZ(r) => r.bounding_box(time0, time1, output_box),
             HittableEnum::ConstantMedium(c) => c.bounding_box(time0, time1, output_box),
         }
-    }
-}
-
-impl Hittable for HittableEnum {
-    fn hit(&self, r: &ray::Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
-        self.hit(r, t_min, t_max, rec)
-    }
-
-    fn bounding_box(&self, time0: f64, time1: f64, output_box: &mut AABB) -> bool {
-        self.bounding_box(time0, time1, output_box)
     }
 }
 
